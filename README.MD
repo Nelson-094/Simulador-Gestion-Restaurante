@@ -1,6 +1,6 @@
 # Restaurante JS · Simulador Interactivo
 
-Este es un proyecto desarrollado como parte del curso de JavaScript de Coderhouse. Representa un sistema inicial de simulador de restaurante, con funcionalidades básicas y una estructura lista para escalar hacia un sistema completo de gestión.
+Este es un proyecto representa un sistema inicial de simulador de restaurante, con funcionalidades básicas y una estructura lista para escalar hacia un sistema completo de gestión.
 
 ## 🧩 Descripción del Proyecto
 
