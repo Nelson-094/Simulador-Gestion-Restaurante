@@ -1,16 +1,16 @@
 # Restaurante JS · Simulador Interactivo
 
-Este es un proyecto desarrollado como parte del curso de JavaScript de Coderhouse. Representa un sistema inicial de simulador de restaurante, con funcionalidades básicas y una estructura lista para escalar hacia un sistema completo de gestión.
+Este es un proyecto que representa un sistema inicial de simulador de restaurante, con funcionalidades básicas y una estructura lista para escalar hacia un sistema completo de gestión.
 
 ## 🧩 Descripción del Proyecto
 
-La aplicación simula la experiencia de un restaurante desde el punto de vista del cliente. Actualmente permite:
+Esta aplicación simula la experiencia de un cliente en un restaurante. Desde un menú interactivo hasta la generación del pedido y cálculo del total, el simulador permite:
 
-- Mostrar una carta interactiva.
-- Seleccionar platos disponibles.
-- Simular la elección de comida mediante JavaScript.
-- Generar una orden y mostrar el total.
-- Navegación HTML optimizada para escalar nuevas secciones.
+- 📋 Ver una carta con platos disponibles.
+- ➕ Agregar y quitar platos del pedido.
+- 💰 Calcular el total de la cuenta.
+- 💾 Guardar el pedido en `localStorage` para mantenerlo activo al recargar la página.
+- ✅ Confirmar el pedido con resumen agrupado.
 
 > El proyecto se encuentra preparado para ampliarse en futuras etapas, incluyendo roles de usuarios (meseros, administradores), y funcionalidad extendida como edición de menú o pedidos en línea.
 
@@ -18,10 +18,15 @@ La aplicación simula la experiencia de un restaurante desde el punto de vista d
 
 ## 📁 Estructura del Proyecto
 
-- `index.html`: Página principal con estructura semántica.
-- `simulador.js`: Contiene toda la lógica en JavaScript, incluyendo condicionales, funciones, ciclos y arrays.
-- `style.css` : Para estilizar el proyecto.
-- `README.md`: Información general del proyecto.
+/restaurante-js
+│
+├── index.html # Página principal con Bootstrap y menú interactivo
+├── simulador.js # Lógica principal en JS
+├── style.css # Estilos personalizados
+├── /assets/img/ # Imágenes utilizadas (opcional)
+├── /assets/js/ # Carpeta JS organizada
+├── README.md # Documentación del proyecto
+└── LICENSE # Licencia MIT
 
 ---
 
