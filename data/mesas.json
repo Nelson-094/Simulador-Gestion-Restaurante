@@ -1,0 +1,124 @@
+{
+    "mesas": [
+        {
+            "id": 1,
+            "capacidad": 2,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Ventana"
+        },
+        {
+            "id": 2,
+            "capacidad": 4,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Centro"
+        },
+        {
+            "id": 3,
+            "capacidad": 2,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Ventana"
+        },
+        {
+            "id": 4,
+            "capacidad": 6,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Privado"
+        },
+        {
+            "id": 5,
+            "capacidad": 4,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Centro"
+        },
+        {
+            "id": 6,
+            "capacidad": 2,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Barra"
+        },
+        {
+            "id": 7,
+            "capacidad": 2,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Ventana"
+        },
+        {
+            "id": 8,
+            "capacidad": 4,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Centro"
+        },
+        {
+            "id": 9,
+            "capacidad": 8,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Privado"
+        },
+        {
+            "id": 10,
+            "capacidad": 2,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Barra"
+        },
+        {
+            "id": 11,
+            "capacidad": 4,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Centro"
+        },
+        {
+            "id": 12,
+            "capacidad": 2,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Ventana"
+        },
+        {
+            "id": 13,
+            "capacidad": 4,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Centro"
+        },
+        {
+            "id": 14,
+            "capacidad": 6,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Privado"
+        },
+        {
+            "id": 15,
+            "capacidad": 2,
+            "estado": "libre",
+            "meseroAsignado": null,
+            "fechaUltimaOcupacion": null,
+            "ubicacion": "Barra"
+        }
+    ]
+}

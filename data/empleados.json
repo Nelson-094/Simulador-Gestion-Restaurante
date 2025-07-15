@@ -1,0 +1,60 @@
+{
+    "empleados": [
+        {
+            "id": 1,
+            "usuario": "mesero1",
+            "password": "123456",
+            "nombre": "Juan Pérez",
+            "rol": "mesero",
+            "activo": true,
+            "fechaIngreso": "2024-01-15",
+            "estadisticas": {
+                "pedidosHoy": 0,
+                "pedidosTotal": 0,
+                "mesasAtendidas": []
+            }
+        },
+        {
+            "id": 2,
+            "usuario": "mesero2",
+            "password": "123456",
+            "nombre": "María González",
+            "rol": "mesero",
+            "activo": true,
+            "fechaIngreso": "2024-02-01",
+            "estadisticas": {
+                "pedidosHoy": 0,
+                "pedidosTotal": 0,
+                "mesasAtendidas": []
+            }
+        },
+        {
+            "id": 3,
+            "usuario": "mesero3",
+            "password": "123456",
+            "nombre": "Carlos Rodríguez",
+            "rol": "mesero",
+            "activo": true,
+            "fechaIngreso": "2024-01-20",
+            "estadisticas": {
+                "pedidosHoy": 0,
+                "pedidosTotal": 0,
+                "mesasAtendidas": []
+            }
+        },
+        {
+            "id": 4,
+            "usuario": "admin",
+            "password": "admin123",
+            "nombre": "Nelson Sánchez",
+            "rol": "administrador",
+            "activo": true,
+            "fechaIngreso": "2024-01-01",
+            "estadisticas": {
+                "pedidosHoy": 0,
+                "pedidosTotal": 0,
+                "mesasAtendidas": []
+            }
+        }
+    ]
+}

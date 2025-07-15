@@ -1,0 +1,52 @@
+{
+  "platos": [
+    {
+      "id": 1,
+      "nombre": "Milanesa con papas",
+      "precio": 2500,
+      "descripcion": "Clásica milanesa con papas fritas doradas",
+      "categoria": "platos principales",
+      "imagen": "assets/img/milanesa.jpg"
+    },
+    {
+      "id": 2,
+      "nombre": "Ravioles con tuco",
+      "precio": 2300,
+      "descripcion": "Pasta casera con salsa de tomate y albahaca",
+      "categoria": "pastas",
+      "imagen": "assets/img/ravioles.jpg"
+    },
+    {
+      "id": 3,
+      "nombre": "Hamburguesa completa",
+      "precio": 2000,
+      "descripcion": "Con cheddar, lechuga, tomate y papas fritas",
+      "categoria": "comida rápida",
+      "imagen": "assets/img/hamburguesa.jpg"
+    },
+    {
+      "id": 4,
+      "nombre": "Ensalada César",
+      "precio": 1800,
+      "descripcion": "Fresca y liviana con pollo grillado",
+      "categoria": "ensaladas",
+      "imagen": "assets/img/ensalada.jpg"
+    },
+    {
+      "id": 5,
+      "nombre": "Pizza Margherita",
+      "precio": 2200,
+      "descripcion": "Con mozzarella, tomate y albahaca fresca",
+      "categoria": "pizzas",
+      "imagen": "assets/img/pizza.jpg"
+    },
+    {
+      "id": 6,
+      "nombre": "Bife de chorizo",
+      "precio": 3200,
+      "descripcion": "Corte premium con guarnición a elección",
+      "categoria": "carnes",
+      "imagen": "assets/img/bife.jpg"
+    }
+  ]
+}

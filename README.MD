@@ -1,5 +1,9 @@
 # Restaurante JS · Simulador Interactivo
 
+<<<<<<< HEAD
+=======
+Este es un proyecto representa un sistema inicial de simulador de restaurante, con funcionalidades básicas y una estructura lista para escalar hacia un sistema completo de gestión.
+>>>>>>> 8286116 (Actualización completa - Sistema profesional de restaurante)
 Este es un proyecto que representa un sistema inicial de simulador de restaurante, con funcionalidades básicas y una estructura lista para escalar hacia un sistema completo de gestión.
 
 ## 🧩 Descripción del Proyecto
@@ -21,11 +25,25 @@ Esta aplicación simula la experiencia de un cliente en un restaurante. Desde un
 /restaurante-js
 │
 ├── index.html # Página principal con Bootstrap y menú interactivo
+<<<<<<< HEAD
 ├── simulador.js # Lógica principal en JS
 ├── style.css # Estilos personalizados
 ├── /assets/img/ # Imágenes utilizadas (opcional)
 ├── /assets/js/ # Carpeta JS organizada
 ├── README.md # Documentación del proyecto
+=======
+
+├── simulador.js # Lógica principal en JS
+
+├── style.css # Estilos personalizados
+
+├── /assets/img/ # Imágenes utilizadas (opcional)
+
+├── /assets/js/ # Carpeta JS organizada
+
+├── README.md # Documentación del proyecto
+
+>>>>>>> 8286116 (Actualización completa - Sistema profesional de restaurante)
 └── LICENSE # Licencia MIT
 
 ---
@@ -63,4 +81,4 @@ Esta aplicación simula la experiencia de un cliente en un restaurante. Desde un
 
 ## 📄 Licencia
 
-MIT © 2024 - Nelson Sánchez
+MIT © 2025 - Nelson Sánchez

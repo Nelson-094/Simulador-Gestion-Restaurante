@@ -1,4 +1,28 @@
-/* Reset básico */
+/* ============================================
+    VARIABLES CSS
+   ============================================ */
+:root {
+    --primary: #d4af37;
+    /* Gold */
+    --secondary: #1a1a1a;
+    /* Almost black */
+    --light: #f8f9fa;
+    /* Off-white */
+    --dark: #121212;
+    /* Deep black */
+    --accent: #8a7d4e;
+    /* Muted gold */
+    --gray: #6c757d;
+    --light-gray: #e9ecef;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --info: #17a2b8;
+}
+
+/* ============================================
+    CONFIGURACIÓN BASE
+   ============================================ */
 * {
     margin: 0;
     padding: 0;
@@ -6,74 +30,885 @@
 }
 
 body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Encabezado */
-header {
-    background: linear-gradient(90deg, #007bff, #0056b3);
-    text-align: center;
-    padding: 20px;
-    color: white;
-    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1,
 h2,
-h3 {
-    margin-bottom: 15px;
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Playfair Display', serif;
 }
 
-/* Menú del día */
-#menu-container .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    transition: transform 0.2s ease-in-out;
+/* ============================================
+    NAVBAR
+   ============================================ */
+.navbar {
+    background-color: var(--dark) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 0;
 }
 
-#menu-container .card:hover {
-    transform: scale(1.02);
+.navbar-brand {
+    color: var(--primary) !important;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.5rem;
 }
 
-.card-body {
+.nav-link {
+    color: var(--light) !important;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--primary) !important;
+}
+
+.nav-link.active {
+    color: var(--primary) !important;
+    font-weight: 500;
+}
+
+.btn-login {
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    transition: all 0.3s;
+}
+
+.btn-login:hover {
+    background-color: var(--primary);
+    color: var(--dark);
+}
+
+/* ============================================
+    HERO SECTION
+   ============================================ */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 5rem 0;
     text-align: center;
+    margin-bottom: 2rem;
 }
 
-.card-title {
-    font-weight: bold;
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    color: var(--light);
 }
 
-.card-text {
-    font-size: 0.95rem;
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    color: var(--light-gray);
 }
 
-/* Botón de agregar */
-.agregar-btn {
-    margin-top: 10px;
+.hero-buttons {
+    margin-top: 2rem;
 }
 
-/* Lista de pedidos */
-#pedido-lista {
-    max-height: 250px;
-    overflow-y: auto;
+/* ============================================
+    SECCIONES
+   ============================================ */
+.section-title {
+    color: var(--secondary);
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
-#pedido-lista li {
+.section-subtitle {
+    color: var(--gray);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* ============================================
+    TARJETAS DE MENÚ
+   ============================================ */
+.menu-item {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    background-color: white;
+    border: 1px solid var(--light-gray);
+}
+
+.menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.menu-img {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.menu-img svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.8;
+}
+
+.menu-item-body {
+    padding: 1.25rem;
+}
+
+.menu-item-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+}
+
+.menu-item-price {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+}
+
+.menu-item-description {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+/* ============================================
+    BOTONES PERSONALIZADOS
+   ============================================ */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--light);
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--dark);
+}
+
+/* ============================================
+    CARRITO
+   ============================================ */
+.cart {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--light-gray);
+    overflow: hidden;
+}
+
+.cart-header {
+    background-color: var(--light-gray);
+    padding: 1.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.cart-title {
+    color: var(--secondary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.mesa-info {
+    font-size: 0.9rem;
+}
+
+.cart-body {
+    padding: 1.5rem;
+    min-height: 200px;
+}
+
+.cart-empty {
+    text-align: center;
+    color: var(--gray);
+    padding: 2rem 0;
+}
+
+.cart-empty i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.cart-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--light-gray);
 }
 
-/* Confirmar pedido */
-#confirmar-pedido {
-    width: 100%;
-    margin-top: 10px;
+.cart-item:last-child {
+    border-bottom: none;
 }
 
-/* Estilo del total */
-#total-pedido {
-    font-size: 1.3rem;
-    color: #28a745;
-    font-weight: bold;
+.cart-item-name {
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+.cart-item-quantity {
+    width: 40px;
+    text-align: center;
+    margin: 0 0.5rem;
+}
+
+.cart-item-price {
+    font-weight: 600;
+    color: var(--primary);
+    width: 80px;
+    text-align: right;
+}
+
+.cart-total {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--light-gray);
+}
+
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.total-final {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--secondary);
+    border-top: 1px solid var(--light-gray);
+    padding-top: 0.5rem;
+}
+
+.cart-footer {
+    padding: 1.5rem;
+    background-color: var(--light-gray);
+    border-top: 1px solid #dee2e6;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light-gray);
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quantity-btn:hover {
+    background-color: var(--primary);
+    color: var(--dark);
+    border-color: var(--primary);
+}
+
+/* ============================================
+    LOGIN
+   ============================================ */
+.login-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: none;
+    overflow: hidden;
+}
+
+.login-card .card-header {
+    background-color: var(--primary);
+    color: var(--dark);
+    font-weight: 600;
+}
+
+/* ============================================
+    ESTADÍSTICAS DE EMPLEADOS
+   ============================================ */
+.employee-stats {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================
+    MESAS
+   ============================================ */
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.table-grid-cliente {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1rem;
+}
+
+.table-item {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.table-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.table-item.libre {
+    background-color: var(--success);
+}
+
+.table-item.ocupada {
+    background-color: var(--danger);
+}
+
+.table-item.reservada {
+    background-color: var(--warning);
+    color: var(--dark);
+}
+
+.table-item small {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    margin-top: 0.25rem;
+}
+
+.table-legend {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+.legend-color.libre {
+    background-color: var(--success);
+}
+
+.legend-color.ocupada {
+    background-color: var(--danger);
+}
+
+.legend-color.reservada {
+    background-color: var(--warning);
+}
+
+.table-stats {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--light-gray);
+}
+
+.table-stats .stat-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.table-stats .stat-item:last-child {
+    border-bottom: none;
+}
+
+/* ============================================
+    DISPONIBILIDAD (CLIENTE)
+   ============================================ */
+.availability-stats {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--light-gray);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* ============================================
+    CONTACTO
+   ============================================ */
+.contact-item {
+    text-align: center;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--light-gray);
+    margin-bottom: 2rem;
+}
+
+.contact-item i {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.contact-item h5 {
+    color: var(--secondary);
+    margin-bottom: 1rem;
+}
+
+.contact-item p {
+    color: var(--gray);
+    margin-bottom: 0;
+}
+
+/* ============================================
+    TABS DE MENÚ
+   ============================================ */
+.nav-pills .nav-link.active {
+    background-color: var(--primary);
+    color: var(--dark) !important;
+}
+
+.nav-pills .nav-link {
+    color: var(--secondary) !important;
+    border-radius: 6px;
+    margin-right: 0.5rem;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: var(--light-gray);
+}
+
+.tab-content {
+    padding-top: 2rem;
+}
+
+/* ============================================
+    MODAL
+   ============================================ */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: var(--light-gray);
+    border-bottom: 2px solid var(--primary);
+}
+
+.modal-title {
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+.current-status {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.current-status.libre {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--success);
+}
+
+.current-status.ocupada {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger);
+}
+
+.current-status.reservada {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #856404;
+}
+
+/* ============================================
+    FOOTER
+   ============================================ */
+footer {
+    background-color: var(--dark);
+    color: var(--light-gray);
+    padding: 2rem 0;
+    margin-top: auto;
+}
+
+/* ============================================
+    ANIMACIONES
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+/* ============================================
+    STICKY ELEMENTS
+   ============================================ */
+.sticky-top {
+    position: sticky;
+    top: 20px;
+    z-index: 1020;
+}
+
+/* ============================================
+    UTILIDADES
+   ============================================ */
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.border-primary {
+    border-color: var(--primary) !important;
+}
+
+/* ============================================
+    RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .employee-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .table-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .table-legend {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sticky-top {
+        position: relative;
+        top: auto;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero {
+        padding: 3rem 0;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .cart-item-name {
+        width: 100%;
+    }
+
+    .quantity-control {
+        margin: 0.5rem 0;
+    }
+
+    .cart-item-price {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+/* ============================================
+    UTILIDADES ADICIONALES
+   ============================================ */
+.text-muted {
+    color: var(--gray) !important;
+}
+
+.bg-light {
+    background-color: var(--light) !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.border-0 {
+    border: 0 !important;
+}
+
+.rounded {
+    border-radius: 0.375rem !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+.p-0 {
+    padding: 0 !important;
+}
+
+/* ============================================
+    ESTADOS DE CARGA
+   ============================================ */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-color: var(--primary);
+}
+
+/* ============================================
+    NOTIFICACIONES Y ALERTAS
+   ============================================ */
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--success);
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger);
+}
+
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #856404;
+}
+
+.alert-info {
+    background-color: rgba(23, 162, 184, 0.1);
+    color: var(--info);
+}
+
+/* ============================================
+    MEJORAS ESPECÍFICAS PARA SWEETALERT
+   ============================================ */
+.swal2-popup {
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.swal2-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--secondary);
+}
+
+.swal2-confirm {
+    background-color: var(--primary) !important;
+    color: var(--dark) !important;
+}
+
+.swal2-cancel {
+    background-color: var(--gray) !important;
+}
+
+/* ============================================
+    TRANSICIONES SUAVES
+   ============================================ */
+.btn,
+.card,
+.form-control,
+.form-select {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* ============================================
+    SCROLL PERSONALIZADO
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
 }
