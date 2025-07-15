@@ -1,6 +1,4 @@
-/* ============================================
-    VARIABLES CSS
-   ============================================ */
+/* VARIABLES CSS */
 :root {
     --primary: #d4af37;
     /* Gold */
@@ -20,9 +18,7 @@
     --info: #17a2b8;
 }
 
-/* ============================================
-    CONFIGURACIÓN BASE
-   ============================================ */
+/* CONFIGURACIÓN BASE */
 * {
     margin: 0;
     padding: 0;
@@ -47,9 +43,7 @@ h6 {
     font-family: 'Playfair Display', serif;
 }
 
-/* ============================================
-    NAVBAR
-   ============================================ */
+/* NAVBAR */
 .navbar {
     background-color: var(--dark) !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -90,17 +84,24 @@ h6 {
     color: var(--dark);
 }
 
-/* ============================================
-    HERO SECTION
-   ============================================ */
+/* HERO SECTION */
 .hero {
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80');
     background-size: cover;
     background-position: center;
     color: white;
-    padding: 5rem 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
     text-align: center;
     margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: 100vh;
+        padding: 3rem 0;
+    }
 }
 
 .hero h1 {
@@ -123,9 +124,7 @@ h6 {
     margin-top: 2rem;
 }
 
-/* ============================================
-    SECCIONES
-   ============================================ */
+/* SECCIONES */
 .section-title {
     color: var(--secondary);
     font-weight: 600;
@@ -138,9 +137,7 @@ h6 {
     margin-bottom: 2rem;
 }
 
-/* ============================================
-    TARJETAS DE MENÚ
-   ============================================ */
+/* TARJETAS DE MENÚ */
 .menu-item {
     border-radius: 12px;
     overflow: hidden;
@@ -197,9 +194,7 @@ h6 {
     line-height: 1.5;
 }
 
-/* ============================================
-    BOTONES PERSONALIZADOS
-   ============================================ */
+/* BOTONES PERSONALIZADOS */
 .btn-primary {
     background-color: var(--primary);
     border-color: var(--primary);
@@ -224,9 +219,7 @@ h6 {
     color: var(--dark);
 }
 
-/* ============================================
-    CARRITO
-   ============================================ */
+/* CARRITO */
 .cart {
     background-color: white;
     border-radius: 12px;
@@ -348,9 +341,7 @@ h6 {
     border-color: var(--primary);
 }
 
-/* ============================================
-    LOGIN
-   ============================================ */
+/* LOGIN */
 .login-card {
     background-color: white;
     border-radius: 12px;
@@ -365,9 +356,7 @@ h6 {
     font-weight: 600;
 }
 
-/* ============================================
-    ESTADÍSTICAS DE EMPLEADOS
-   ============================================ */
+/* ESTADÍSTICAS DE EMPLEADOS */
 .employee-stats {
     display: flex;
     gap: 1.5rem;
@@ -396,9 +385,7 @@ h6 {
     margin-bottom: 0.5rem;
 }
 
-/* ============================================
-    MESAS
-   ============================================ */
+/* MESAS */
 .table-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -499,9 +486,7 @@ h6 {
     border-bottom: none;
 }
 
-/* ============================================
-    DISPONIBILIDAD (CLIENTE)
-   ============================================ */
+/* DISPONIBILIDAD (CLIENTE) */
 .availability-stats {
     background-color: white;
     border-radius: 12px;
@@ -516,9 +501,7 @@ h6 {
     margin-top: 1.5rem;
 }
 
-/* ============================================
-    CONTACTO
-   ============================================ */
+/* CONTACTO */
 .contact-item {
     text-align: center;
     padding: 2rem;
@@ -545,9 +528,7 @@ h6 {
     margin-bottom: 0;
 }
 
-/* ============================================
-    TABS DE MENÚ
-   ============================================ */
+/* TABS DE MENÚ */
 .nav-pills .nav-link.active {
     background-color: var(--primary);
     color: var(--dark) !important;
@@ -569,9 +550,7 @@ h6 {
     padding-top: 2rem;
 }
 
-/* ============================================
-    MODAL
-   ============================================ */
+/* MODAL */
 .modal-content {
     border-radius: 12px;
     border: none;
@@ -620,9 +599,7 @@ h6 {
     color: #856404;
 }
 
-/* ============================================
-    FOOTER
-   ============================================ */
+/* FOOTER */
 footer {
     background-color: var(--dark);
     color: var(--light-gray);
@@ -630,9 +607,7 @@ footer {
     margin-top: auto;
 }
 
-/* ============================================
-    ANIMACIONES
-   ============================================ */
+/* ANIMACIONES */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -667,18 +642,14 @@ footer {
     animation: pulse 2s infinite;
 }
 
-/* ============================================
-    STICKY ELEMENTS
-   ============================================ */
+/* STICKY ELEMENTS */
 .sticky-top {
     position: sticky;
     top: 20px;
     z-index: 1020;
 }
 
-/* ============================================
-    UTILIDADES
-   ============================================ */
+/* UTILIDADES */
 .text-primary {
     color: var(--primary) !important;
 }
@@ -691,9 +662,7 @@ footer {
     border-color: var(--primary) !important;
 }
 
-/* ============================================
-    RESPONSIVE DESIGN
-   ============================================ */
+/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 2.5rem;
@@ -762,9 +731,7 @@ footer {
     }
 }
 
-/* ============================================
-    UTILIDADES ADICIONALES
-   ============================================ */
+/* ADICIONALES */
 .text-muted {
     color: var(--gray) !important;
 }
@@ -813,9 +780,7 @@ footer {
     padding: 0 !important;
 }
 
-/* ============================================
-    ESTADOS DE CARGA
-   ============================================ */
+/* ESTADOS DE CARGA */
 .loading-spinner {
     display: flex;
     justify-content: center;
@@ -829,9 +794,7 @@ footer {
     border-color: var(--primary);
 }
 
-/* ============================================
-    NOTIFICACIONES Y ALERTAS
-   ============================================ */
+/* NOTIFICACIONES Y ALERTAS */
 .alert {
     border-radius: 8px;
     border: none;
@@ -857,9 +820,7 @@ footer {
     color: var(--info);
 }
 
-/* ============================================
-    MEJORAS ESPECÍFICAS PARA SWEETALERT
-   ============================================ */
+/* MEJORAS ESPECÍFICAS PARA SWEETALERT */
 .swal2-popup {
     border-radius: 12px;
     font-family: 'Poppins', sans-serif;
@@ -879,9 +840,7 @@ footer {
     background-color: var(--gray) !important;
 }
 
-/* ============================================
-    TRANSICIONES SUAVES
-   ============================================ */
+/* TRANSICIONES SUAVES */
 .btn,
 .card,
 .form-control,
@@ -893,9 +852,7 @@ footer {
     transform: translateY(-2px);
 }
 
-/* ============================================
-    SCROLL PERSONALIZADO
-   ============================================ */
+/* SCROLL PERSONALIZADO */
 ::-webkit-scrollbar {
     width: 8px;
 }

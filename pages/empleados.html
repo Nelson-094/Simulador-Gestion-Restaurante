@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Empleados - Restaurante JS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.32/sweetalert2.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-utensils me-2"></i>
+                Restaurante JS - Panel Empleados
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="./empleados.html">Tomar Pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./mesas.html">Gestionar Mesas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Inicio</a>
+                    </li>
+                </ul>
+                <div class="navbar-nav">
+                    <span class="navbar-text me-3" id="usuario-logueado">
+                        <i class="fas fa-user me-1"></i>
+                        <span id="nombre-usuario"></span>
+                    </span>
+                    <button class="btn btn-outline-light btn-sm" id="cerrar-sesion">
+                        <i class="fas fa-sign-out-alt me-1"></i>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4 mb-5">
+        <div class="row">
+            <!-- Menú Section -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Tomar Pedido</h2>
+                    <div class="employee-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Mesa actual:</span>
+                            <span class="stat-value" id="mesa-actual">No asignada</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Pedidos hoy:</span>
+                            <span class="stat-value" id="pedidos-hoy">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Seleccionar Mesa</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select class="form-select" id="seleccionar-mesa">
+                                    <option value="">Seleccionar mesa...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-success" id="asignar-mesa">
+                                    <i class="fas fa-check me-2"></i>Asignar Mesa
+                                </button>
+                                <button class="btn btn-outline-secondary" id="liberar-mesa" style="display: none;">
+                                    <i class="fas fa-times me-2"></i>Liberar Mesa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <ul class="nav nav-pills mb-4" id="menu-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="entradas-tab" data-bs-toggle="pill" data-bs-target="#entradas" type="button">Entradas</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="platos-principales-tab" data-bs-toggle="pill" data-bs-target="#platos-principales" type="button">Platos Principales</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="postres-tab" data-bs-toggle="pill" data-bs-target="#postres" type="button">Postres</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="bebidas-tab" data-bs-toggle="pill" data-bs-target="#bebidas" type="button">Bebidas</button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="menu-tabs-content">
+                    <div class="tab-pane fade show active" id="entradas" role="tabpanel">
+                        <div class="row g-4" id="entradas-container">
+                            <!-- Generado dinámicamente -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="platos-principales" role="tabpanel">
+                        <div class="row g-4" id="platos-principales-container">
+                            <!-- Generado dinámicamente -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="postres" role="tabpanel">
+                        <div class="row g-4" id="postres-container">
+                            <!-- Generado dinámicamente -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="bebidas" role="tabpanel">
+                        <div class="row g-4" id="bebidas-container">
+                            <!-- Generado dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Carrito Section -->
+            <div class="col-lg-4">
+                <div class="cart sticky-top">
+                    <div class="cart-header">
+                        <h3 class="cart-title">
+                            <i class="fas fa-shopping-cart me-2"></i>
+                            Pedido Actual
+                        </h3>
+                        <div class="mesa-info" id="mesa-info" style="display: none;">
+                            <small class="text-muted">Mesa: <span id="mesa-pedido"></span></small>
+                        </div>
+                    </div>
+                    
+                    <div class="cart-body">
+                        <div id="cart-items">
+                            <div class="cart-empty">
+                                <i class="fas fa-shopping-cart"></i>
+                                <p>Selecciona una mesa y agrega platos</p>
+                            </div>
+                        </div>
+                        
+                        <div class="cart-total">
+                            <div class="total-line">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">$0.00</span>
+                            </div>
+                            <div class="total-line">
+                                <span>IVA (21%):</span>
+                                <span id="iva">$0.00</span>
+                            </div>
+                            <div class="total-line total-final">
+                                <span>Total:</span>
+                                <span id="total-final">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cart-footer">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg" id="confirmar-pedido" disabled>
+                                <i class="fas fa-check-circle me-2"></i>
+                                Confirmar Pedido
+                            </button>
+                            <button class="btn btn-outline-danger" id="limpiar-carrito">
+                                <i class="fas fa-trash me-2"></i>
+                                Limpiar Pedido
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.32/sweetalert2.min.js"></script>
+    <script src="../js/empleados.js"></script>
+</body>
+</html>

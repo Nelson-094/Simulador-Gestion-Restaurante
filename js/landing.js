@@ -1,5 +1,5 @@
 // ============================================
-// MENÚ CLIENTE - VISTA PÚBLICA
+// LANDING PAGE - RESTAURANTE JS
 // ============================================
 
 // Variables globales
@@ -16,12 +16,16 @@ const inicializarApp = () => {
     configurarEventos();
     verificarHorario();
 
-    // Actualizar cada 5 minutos
+    // Actualizar disponibilidad cada 5 minutos
     setInterval(actualizarDisponibilidad, 300000);
 };
 
 // Configurar eventos
 const configurarEventos = () => {
+    // Login de empleados
+    document.getElementById('btn-login-empleados').addEventListener('click', mostrarModalLogin);
+    document.getElementById('login-form').addEventListener('submit', manejarLogin);
+
     // Actualizar disponibilidad
     document.getElementById('actualizar-disponibilidad').addEventListener('click', actualizarDisponibilidad);
 
@@ -38,6 +42,9 @@ const configurarEventos = () => {
             }
         });
     });
+
+    // Cambiar navbar activo según scroll
+    window.addEventListener('scroll', actualizarNavbarActivo);
 };
 
 // ============================================
@@ -58,14 +65,14 @@ const cargarDatos = async () => {
 
     } catch (error) {
         console.error('Error al cargar datos:', error);
-        mostrarError('Error al cargar los datos del menú');
+        mostrarError('Error al cargar los datos del sistema');
     }
 };
 
 // Cargar menú
 const cargarMenu = async () => {
     try {
-        const response = await fetch('data/menu.json');
+        const response = await fetch('./data/menu.json');
         const data = await response.json();
         menu = data.platos;
     } catch (error) {
@@ -83,8 +90,22 @@ const cargarMenu = async () => {
                 id: 2,
                 nombre: "Ensalada César",
                 precio: 1800,
-                descripcion: "Fresca y liviana",
+                descripcion: "Fresca y liviana con pollo grillado",
                 categoria: "entradas"
+            },
+            {
+                id: 3,
+                nombre: "Tiramisú",
+                precio: 800,
+                descripcion: "Postre italiano clásico",
+                categoria: "postres"
+            },
+            {
+                id: 4,
+                nombre: "Vino Tinto",
+                precio: 650,
+                descripcion: "Copa de vino de la casa",
+                categoria: "bebidas"
             }
         ];
     }
@@ -101,7 +122,7 @@ const cargarMesas = async () => {
         }
 
         // Si no hay estado guardado, cargar desde JSON
-        const response = await fetch('./mesas.json');
+        const response = await fetch('./data/mesas.json');
         const data = await response.json();
         mesas = data.mesas;
 
@@ -110,7 +131,10 @@ const cargarMesas = async () => {
         // Datos de respaldo
         mesas = [
             { id: 1, capacidad: 2, estado: "libre" },
-            { id: 2, capacidad: 4, estado: "libre" }
+            { id: 2, capacidad: 4, estado: "libre" },
+            { id: 3, capacidad: 2, estado: "ocupada" },
+            { id: 4, capacidad: 6, estado: "libre" },
+            { id: 5, capacidad: 4, estado: "reservada" }
         ];
     }
 };
@@ -243,7 +267,128 @@ const actualizarEstadisticas = () => {
 };
 
 // ============================================
-// FUNCIONES DE ACTUALIZACIÓN
+// FUNCIONES DE AUTENTICACIÓN
+// ============================================
+
+// Mostrar modal de login
+const mostrarModalLogin = () => {
+    const modal = new bootstrap.Modal(document.getElementById('modal-login-empleados'));
+    modal.show();
+};
+
+// Manejar login
+const manejarLogin = async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const empleados = await cargarEmpleados();
+        const empleado = empleados.find(emp =>
+            emp.usuario === username && emp.password === password && emp.activo
+        );
+
+        if (empleado) {
+            // Guardar sesión
+            localStorage.setItem('sesionRestaurante', JSON.stringify(empleado));
+
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modal-login-empleados'));
+            modal.hide();
+
+            // Mostrar notificación y redirigir
+            Swal.fire({
+                icon: 'success',
+                title: '¡Bienvenido!',
+                text: `Hola ${empleado.nombre}`,
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                // Redirigir según el rol
+                if (empleado.rol === 'administrador') {
+                    window.location.href = 'pages/mesas.html';
+                } else {
+                    window.location.href = 'pages/empleados.html';
+                }
+            });
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de autenticación',
+                text: 'Usuario o contraseña incorrectos'
+            });
+        }
+    } catch (error) {
+        console.error('Error al verificar credenciales:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al conectar con el servidor'
+        });
+    }
+};
+
+// Cargar empleados
+const cargarEmpleados = async () => {
+    try {
+        const response = await fetch('./data/empleados.json');
+        const data = await response.json();
+        return data.empleados;
+    } catch (error) {
+        console.error('Error al cargar empleados:', error);
+        // Datos de respaldo
+        return [
+            {
+                id: 1,
+                usuario: "mesero1",
+                password: "123456",
+                nombre: "Juan Pérez",
+                rol: "mesero",
+                activo: true
+            },
+            {
+                id: 2,
+                usuario: "admin",
+                password: "admin123",
+                nombre: "Administrador",
+                rol: "administrador",
+                activo: true
+            }
+        ];
+    }
+};
+
+// ============================================
+// FUNCIONES DE NAVEGACIÓN
+// ============================================
+
+// Actualizar navbar activo según scroll
+const actualizarNavbarActivo = () => {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    let current = '';
+
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= (sectionTop - 200)) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+        }
+    });
+};
+
+// ============================================
+// FUNCIONES UTILITARIAS
 // ============================================
 
 // Actualizar disponibilidad
@@ -264,9 +409,7 @@ const actualizarDisponibilidad = async () => {
             mesas = JSON.parse(estadoGuardado);
         } else {
             // Cargar desde JSON si no hay estado guardado
-            const response = await fetch('./mesas.json');
-            const data = await response.json();
-            mesas = data.mesas;
+            await cargarMesas();
         }
 
         // Actualizar interfaz
@@ -290,10 +433,6 @@ const actualizarDisponibilidad = async () => {
         btn.disabled = false;
     }
 };
-
-// ============================================
-// FUNCIONES UTILITARIAS
-// ============================================
 
 // Obtener texto del estado
 const getEstadoTexto = (estado) => {
@@ -321,9 +460,12 @@ const verificarHorario = () => {
         clase = 'text-warning';
     }
 
+    // Si hay un elemento de horario, actualizarlo
     const horarioElement = document.getElementById('horario-actual');
-    horarioElement.textContent = estado;
-    horarioElement.className = clase;
+    if (horarioElement) {
+        horarioElement.textContent = estado;
+        horarioElement.className = clase;
+    }
 };
 
 // Mostrar notificación
@@ -339,8 +481,15 @@ const mostrarNotificacion = (mensaje, tipo = 'info') => {
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     `;
 
+    const iconos = {
+        'success': 'fas fa-check-circle',
+        'error': 'fas fa-exclamation-triangle',
+        'warning': 'fas fa-exclamation-circle',
+        'info': 'fas fa-info-circle'
+    };
+
     notification.innerHTML = `
-        <i class="fas fa-check-circle me-2"></i>
+        <i class="${iconos[tipo] || iconos.info} me-2"></i>
         ${mensaje}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
@@ -357,7 +506,7 @@ const mostrarNotificacion = (mensaje, tipo = 'info') => {
 
 // Mostrar error
 const mostrarError = (mensaje) => {
-    mostrarNotificacion(mensaje, 'danger');
+    mostrarNotificacion(mensaje, 'error');
 };
 
 // ============================================
@@ -381,6 +530,11 @@ const agregarAnimacionScroll = () => {
 
     // Observar elementos del menú
     document.querySelectorAll('.menu-item').forEach(item => {
+        observer.observe(item);
+    });
+
+    // Observar elementos de contacto
+    document.querySelectorAll('.contact-item').forEach(item => {
         observer.observe(item);
     });
 };
