@@ -1,14 +1,10 @@
-// ============================================
 // MENÚ CLIENTE - VISTA PÚBLICA
-// ============================================
 
 // Variables globales
 let menu = [];
 let mesas = [];
 
-// ============================================
 // FUNCIONES DE INICIALIZACIÓN
-// ============================================
 
 // Inicializar aplicación
 const inicializarApp = () => {
@@ -40,9 +36,7 @@ const configurarEventos = () => {
     });
 };
 
-// ============================================
 // FUNCIONES DE CARGA DE DATOS
-// ============================================
 
 // Cargar todos los datos
 const cargarDatos = async () => {
@@ -115,9 +109,7 @@ const cargarMesas = async () => {
     }
 };
 
-// ============================================
 // FUNCIONES DE INTERFAZ - MENÚ
-// ============================================
 
 // Generar HTML del menú
 const generarMenuHTML = () => {
@@ -182,9 +174,7 @@ const crearTarjetaPlato = (plato) => {
     return col;
 };
 
-// ============================================
 // FUNCIONES DE INTERFAZ - MESAS
-// ============================================
 
 // Generar grid de mesas
 const generarGridMesas = () => {
@@ -245,9 +235,7 @@ const actualizarEstadisticas = () => {
     document.getElementById('ultima-actualizacion-cliente').textContent = timeString;
 };
 
-// ============================================
 // FUNCIONES DE ACTUALIZACIÓN
-// ============================================
 
 // Actualizar disponibilidad
 const actualizarDisponibilidad = async () => {
@@ -294,9 +282,7 @@ const actualizarDisponibilidad = async () => {
     }
 };
 
-// ============================================
 // FUNCIONES UTILITARIAS
-// ============================================
 
 // Obtener texto del estado
 const getEstadoTexto = (estado) => {
@@ -363,9 +349,7 @@ const mostrarError = (mensaje) => {
     mostrarNotificacion(mensaje, 'danger');
 };
 
-// ============================================
 // ANIMACIONES Y EFECTOS
-// ============================================
 
 // Agregar animación al hacer scroll
 const agregarAnimacionScroll = () => {
@@ -400,9 +384,7 @@ const inicializarParallax = () => {
     });
 };
 
-// ============================================
 // INICIALIZACIÓN
-// ============================================
 
 // Inicializar cuando el DOM esté listo
 if (document.readyState === 'loading') {
