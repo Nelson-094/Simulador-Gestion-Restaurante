@@ -14,7 +14,7 @@
       "precio": 8500,
       "descripcion": "Pan tostado con tomate, ajo y albahaca",
       "categoria": "entradas",
-      "imagen": "./assets/img/bruschetta.png"
+      "imagen": "assets/img/bruschetta.png"
     },
     {
       "id": 3,
@@ -22,7 +22,7 @@
       "precio": 15000,
       "descripcion": "Selección de quesos y fiambres regionales",
       "categoria": "entradas",
-      "imagen": "../assets/img/fiambres-tabla.png"
+      "imagen": "assets/img/fiambres-tabla.png"
     },
     {
       "id": 4,
@@ -30,7 +30,7 @@
       "precio": 25000,
       "descripcion": "Clásica milanesa con papas fritas doradas",
       "categoria": "platos principales",
-      "imagen": "../assets/img/milanesa-papas.png"
+      "imagen": "assets/img/milanesa-papas.png"
     },
     {
       "id": 5,
@@ -38,7 +38,7 @@
       "precio": 32000,
       "descripcion": "Corte premium con guarnición a elección",
       "categoria": "platos principales",
-      "imagen": "../assets/img/bife-chorizo.png"
+      "imagen": "assets/img/bife-chorizo.png"
     },
     {
       "id": 6,
@@ -46,7 +46,7 @@
       "precio": 22000,
       "descripcion": "Con mozzarella, tomate y albahaca fresca",
       "categoria": "platos principales",
-      "imagen": "../assets/img/pizza-margherita.png"
+      "imagen": "assets/img/pizza-margherita.png"
     },
     {
       "id": 7,
@@ -54,7 +54,7 @@
       "precio": 8000,
       "descripcion": "Clásico postre italiano con café y mascarpone",
       "categoria": "postres",
-      "imagen": "../assets/img/tiramisu.png"
+      "imagen": "assets/img/tiramisu.png"
     },
     {
       "id": 8,
@@ -62,7 +62,7 @@
       "precio": 6500,
       "descripcion": "Con dulce de leche artesanal",
       "categoria": "postres",
-      "imagen": "../assets/img/flan-casero.png"
+      "imagen": "assets/img/flan-casero.png"
     },
     {
       "id": 9,
@@ -70,7 +70,7 @@
       "precio": 7000,
       "descripcion": "Tres bochas de sabores a elección",
       "categoria": "postres",
-      "imagen": "../assets/img/helado-artesanal.png"
+      "imagen": "assets/img/helado-artesanal.png"
     },
     {
       "id": 10,
@@ -78,7 +78,7 @@
       "precio": 8500,
       "descripcion": "Copa de Malbec de la casa",
       "categoria": "bebidas",
-      "imagen": "../assets/img/vino-tinto.png"
+      "imagen": "assets/img/vino-tinto.png"
     },
     {
       "id": 11,
