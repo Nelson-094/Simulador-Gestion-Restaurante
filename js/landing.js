@@ -63,75 +63,93 @@ const cargarDatos = async () => {
     }
 };
 
-// Cargar menú
-const cargarMenu = async () => {
+// Cargar Menú
+async function cargarMenu() {
     try {
         const response = await fetch('./data/menu.json');
-        const data = await response.json();
-        menu = data.platos;
-    } catch (error) {
-        console.error('Error al cargar menú:', error);
-        // Datos de respaldo
-        menu = [
-            {
-                id: 1,
-                nombre: "Milanesa con papas",
-                precio: 2500,
-                descripcion: "Clásica milanesa con papas fritas",
-                categoria: "platos principales"
-            },
-            {
-                id: 2,
-                nombre: "Ensalada César",
-                precio: 1800,
-                descripcion: "Fresca y liviana con pollo grillado",
-                categoria: "entradas"
-            },
-            {
-                id: 3,
-                nombre: "Tiramisú",
-                precio: 800,
-                descripcion: "Postre italiano clásico",
-                categoria: "postres"
-            },
-            {
-                id: 4,
-                nombre: "Vino Tinto",
-                precio: 650,
-                descripcion: "Copa de vino de la casa",
-                categoria: "bebidas"
-            }
-        ];
-    }
-};
+        const menu = await response.json();
 
-// Cargar mesas
-const cargarMesas = async () => {
+        const categorias = ['entradas', 'platos-principales', 'postres', 'bebidas'];
+
+        categorias.forEach(categoria => {
+            const contenedor = document.getElementById(`${categoria}-container`);
+            contenedor.innerHTML = '';
+
+            menu[categoria].forEach(plato => {
+                const card = document.createElement('div');
+                card.classList.add('col-md-6', 'col-lg-4');
+
+                card.innerHTML = `
+                    <div class="card h-100 shadow-sm">
+                        <img src="${plato.imagen}" class="card-img-top" alt="${plato.nombre}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">${plato.nombre}</h5>
+                            <p class="card-text">${plato.descripcion}</p>
+                            <div class="mt-auto">
+                                <span class="badge bg-primary">$${plato.precio.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                contenedor.appendChild(card);
+            });
+        });
+
+    } catch (error) {
+        console.error('Error al cargar el menú:', error);
+    }
+}
+
+// Cargar Disponibilidad de Mesas
+async function cargarMesas() {
     try {
-        // Intentar cargar estado actual desde localStorage
-        const estadoGuardado = localStorage.getItem('estadoMesas');
-        if (estadoGuardado) {
-            mesas = JSON.parse(estadoGuardado);
-            return;
-        }
-
-        // Si no hay estado guardado, cargar desde JSON
         const response = await fetch('./data/mesas.json');
-        const data = await response.json();
-        mesas = data.mesas;
+        const mesas = await response.json();
+
+        const contenedor = document.getElementById('table-grid-cliente');
+        contenedor.innerHTML = '';
+
+        let disponibles = 0;
+        let ocupadas = 0;
+        let reservadas = 0;
+
+        mesas.forEach(mesa => {
+            const div = document.createElement('div');
+            div.classList.add('mesa', mesa.estado);
+            div.textContent = mesa.numero;
+            contenedor.appendChild(div);
+
+            if (mesa.estado === 'libre') disponibles++;
+            else if (mesa.estado === 'ocupada') ocupadas++;
+            else if (mesa.estado === 'reservada') reservadas++;
+        });
+
+        document.getElementById('mesas-disponibles').textContent = disponibles;
+        document.getElementById('mesas-ocupadas-cliente').textContent = ocupadas;
+        document.getElementById('mesas-reservadas-cliente').textContent = reservadas;
+        document.getElementById('ultima-actualizacion-cliente').textContent = new Date().toLocaleTimeString();
 
     } catch (error) {
-        console.error('Error al cargar mesas:', error);
-        // Datos de respaldo
-        mesas = [
-            { id: 1, capacidad: 2, estado: "libre" },
-            { id: 2, capacidad: 4, estado: "libre" },
-            { id: 3, capacidad: 2, estado: "ocupada" },
-            { id: 4, capacidad: 6, estado: "libre" },
-            { id: 5, capacidad: 4, estado: "reservada" }
-        ];
+        console.error('Error al cargar las mesas:', error);
     }
-};
+}
+
+// Botón "Actualizar disponibilidad"
+document.addEventListener('DOMContentLoaded', () => {
+    cargarMenu();
+    cargarMesas();
+
+    const btnActualizar = document.getElementById('actualizar-disponibilidad');
+    if (btnActualizar) {
+        btnActualizar.addEventListener('click', cargarMesas);
+    }
+});
+
+
+
+
+
 
 // FUNCIONES DE INTERFAZ - MENÚ
 
