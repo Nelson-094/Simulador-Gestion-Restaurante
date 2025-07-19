@@ -101,7 +101,7 @@ const cargarMesas = async () => {
         }
 
         // Si no hay estado guardado, cargar desde JSON
-        const response = await fetch('./mesas.json');
+        const response = await fetch('../data/mesas.json');
         const data = await response.json();
         mesas = data.mesas;
 

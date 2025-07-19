@@ -913,3 +913,120 @@ footer {
         font-size: 1.2rem;
     }
 }
+
+/* MEJORAS ADICIONALES RESPONSIVAS */
+
+/* Asegurar que las tarjetas del menú se vean bien */
+.menu-item {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--light-gray);
+}
+
+.menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Mejorar la imagen del menú */
+.menu-img {
+    height: 200px;
+    background: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.menu-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.menu-img:hover img {
+    transform: scale(1.05);
+}
+
+/* Mejorar el cuerpo de la tarjeta */
+.menu-item-body {
+    padding: 1.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive para mesas en vista cliente */
+.table-grid-cliente {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.table-item {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+.table-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.table-item.libre {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.table-item.ocupada {
+    background: linear-gradient(135deg, #dc3545, #e55d6c);
+}
+
+.table-item.reservada {
+    background: linear-gradient(135deg, #ffc107, #ffca2c);
+    color: #212529;
+}
+
+/* Media queries específicas */
+@media (max-width: 768px) {
+    .table-grid-cliente {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .menu-img {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .table-grid-cliente {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .menu-img {
+        height: 140px;
+    }
+
+    .table-item {
+        font-size: 0.8rem;
+    }
+}
