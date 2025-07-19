@@ -7,6 +7,16 @@ let mesas = [];
 let carrito = [];
 let mesaActual = null;
 
+// 🎯 FUNCIÓN UNIVERSAL PARA RUTAS - AGREGAR AL INICIO DE CADA JS
+const construirRutaImagen = (rutaImagen) => {
+    if (!rutaImagen) return null;
+
+    // Detectar automáticamente la ubicación
+    const estaEnPages = window.location.pathname.includes('/pages/');
+
+    return estaEnPages ? `../${rutaImagen}` : `./${rutaImagen}`;
+};
+
 // FUNCIONES DE INICIALIZACIÓN
 
 // Verificar autenticación
@@ -138,7 +148,7 @@ const crearTarjetaPlato = (plato) => {
     card.innerHTML = `
 <div class="menu-img">
         ${plato.imagen ?
-            `<img src="${plato.imagen}" alt="${plato.nombre}" style="width: 100%; height: 100%; object-fit: cover;">` :
+            `<img src="${construirRutaImagen(plato.imagen)}" alt="${plato.nombre}" style="width: 100%; height: 100%; object-fit: cover;">` :
             `<i class="fas fa-utensils" style="font-size: 2rem; color: var(--primary);"></i>`
         }
         </div >

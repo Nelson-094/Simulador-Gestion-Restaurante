@@ -6,6 +6,17 @@ let mesas = [];
 let empleados = [];
 let mesaSeleccionada = null;
 
+
+// 🎯 FUNCIÓN UNIVERSAL PARA RUTAS - AGREGAR AL INICIO DE CADA JS
+const construirRutaImagen = (rutaImagen) => {
+    if (!rutaImagen) return null;
+
+    // Detectar automáticamente la ubicación
+    const estaEnPages = window.location.pathname.includes('/pages/');
+
+    return estaEnPages ? `../${rutaImagen}` : `./${rutaImagen}`;
+};
+
 // FUNCIONES DE INICIALIZACIÓN
 
 // Verificar autenticación
