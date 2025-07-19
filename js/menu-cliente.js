@@ -18,6 +18,7 @@ const inicializarApp = () => {
 
 // Configurar eventos
 const configurarEventos = () => {
+    
     // Actualizar disponibilidad
     document.getElementById('actualizar-disponibilidad').addEventListener('click', actualizarDisponibilidad);
 

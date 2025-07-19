@@ -18,6 +18,7 @@ const inicializarApp = () => {
 
 // Configurar eventos
 const configurarEventos = () => {
+    
     // Login de empleados
     document.getElementById('btn-login-empleados').addEventListener('click', mostrarModalLogin);
     document.getElementById('login-form').addEventListener('submit', manejarLogin);
@@ -59,81 +60,62 @@ const cargarDatos = async () => {
 
     } catch (error) {
         console.error('Error al cargar datos:', error);
-        mostrarError('Error al cargar los datos del sistema');
+        mostrarError('Error al cargar los datos del menú');
     }
 };
 
-// Cargar Menú
-async function cargarMenu() {
+// Cargar menú
+const cargarMenu = async () => {
     try {
         const response = await fetch('../data/menu.json');
-        const menu = await response.json();
-
-        const categorias = ['entradas', 'platos-principales', 'postres', 'bebidas'];
-
-        categorias.forEach(categoria => {
-            const contenedor = document.getElementById(`${categoria}-container`);
-            contenedor.innerHTML = '';
-
-            menu[categoria].forEach(plato => {
-                const card = document.createElement('div');
-                card.classList.add('col-md-6', 'col-lg-4');
-
-                card.innerHTML = `
-                    <div class="card h-100 shadow-sm">
-                        <img src="${plato.imagen}" class="card-img-top" alt="${plato.nombre}">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">${plato.nombre}</h5>
-                            <p class="card-text">${plato.descripcion}</p>
-                            <div class="mt-auto">
-                                <span class="badge bg-primary">$${plato.precio.toFixed(2)}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                contenedor.appendChild(card);
-            });
-        });
-
+        const data = await response.json();
+        menu = data.platos;
     } catch (error) {
-        console.error('Error al cargar el menú:', error);
+        console.error('Error al cargar menú:', error);
+        // Datos de respaldo
+        menu = [
+            {
+                id: 1,
+                nombre: "Milanesa con papas",
+                precio: 2500,
+                descripcion: "Clásica milanesa con papas fritas",
+                categoria: "platos principales"
+            },
+            {
+                id: 2,
+                nombre: "Ensalada César",
+                precio: 1800,
+                descripcion: "Fresca y liviana",
+                categoria: "entradas"
+            }
+        ];
     }
-}
+};
 
-// Cargar Disponibilidad de Mesas
-async function cargarMesas() {
+// Cargar mesas
+const cargarMesas = async () => {
     try {
+        // Intentar cargar estado actual desde localStorage
+        const estadoGuardado = localStorage.getItem('estadoMesas');
+        if (estadoGuardado) {
+            mesas = JSON.parse(estadoGuardado);
+            return;
+        }
+
+        // Si no hay estado guardado, cargar desde JSON
         const response = await fetch('../data/mesas.json');
-        const mesas = await response.json();
-
-        const contenedor = document.getElementById('table-grid-cliente');
-        contenedor.innerHTML = '';
-
-        let disponibles = 0;
-        let ocupadas = 0;
-        let reservadas = 0;
-
-        mesas.forEach(mesa => {
-            const div = document.createElement('div');
-            div.classList.add('mesa', mesa.estado);
-            div.textContent = mesa.numero;
-            contenedor.appendChild(div);
-
-            if (mesa.estado === 'libre') disponibles++;
-            else if (mesa.estado === 'ocupada') ocupadas++;
-            else if (mesa.estado === 'reservada') reservadas++;
-        });
-
-        document.getElementById('mesas-disponibles').textContent = disponibles;
-        document.getElementById('mesas-ocupadas-cliente').textContent = ocupadas;
-        document.getElementById('mesas-reservadas-cliente').textContent = reservadas;
-        document.getElementById('ultima-actualizacion-cliente').textContent = new Date().toLocaleTimeString();
+        const data = await response.json();
+        mesas = data.mesas;
 
     } catch (error) {
-        console.error('Error al cargar las mesas:', error);
+        console.error('Error al cargar mesas:', error);
+        // Datos de respaldo
+        mesas = [
+            { id: 1, capacidad: 2, estado: "libre" },
+            { id: 2, capacidad: 4, estado: "libre" }
+        ];
     }
-}
+};
 
 // Botón "Actualizar disponibilidad"
 document.addEventListener('DOMContentLoaded', () => {
@@ -147,32 +129,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-
-
-
 // FUNCIONES DE INTERFAZ - MENÚ
 
-// Generar HTML del menú por categoría específica
-const generarMenuHTML = (categoriaEspecifica = null) => {
-    const categorias = categoriaEspecifica ? [categoriaEspecifica] : ['entradas', 'platos principales', 'postres', 'bebidas'];
+// Generar HTML del menú
+const generarMenuHTML = () => {
+    const categorias = ['entradas', 'platos principales', 'postres', 'bebidas'];
 
     categorias.forEach(categoria => {
         const container = document.getElementById(`${categoria.replace(' ', '-')}-container`);
         if (container) {
-            // ✅ SIEMPRE limpiar el contenedor
             container.innerHTML = '';
 
             const platosCategoria = menu.filter(plato => plato.categoria === categoria);
 
             if (platosCategoria.length === 0) {
                 container.innerHTML = '<div class="col-12"><p class="text-muted text-center">No hay platos disponibles en esta categoría</p></div>';
-            } else {
-                platosCategoria.forEach(plato => {
-                    const platoHTML = crearTarjetaPlato(plato);
-                    container.appendChild(platoHTML);
-                });
+                return;
             }
+
+            platosCategoria.forEach(plato => {
+                const platoHTML = crearTarjetaPlato(plato);
+                container.appendChild(platoHTML);
+            });
         }
     });
 };
@@ -196,21 +174,21 @@ const crearTarjetaPlato = (plato) => {
     const icono = iconos[plato.categoria] || 'fas fa-utensils';
 
     card.innerHTML = `
-    <div class="menu-img responsive-img">
+    <div class="menu-img">
         ${plato.imagen ?
-            `<img src="${plato.imagen}" alt="${plato.nombre}" class="img-responsive">` :
-            `<i class="fas fa-utensils responsive-icon"></i>`
+            `<img src="${plato.imagen}" alt="${plato.nombre}" style="width: 100%; height: 100%; object-fit: cover;">` :
+            `<i class="fas fa-utensils" style="font-size: 2rem; color: var(--primary);"></i>`
         }
-    </div>
-    <div class="menu-item-body responsive-body">
-        <h5 class="menu-item-title responsive-title">${plato.nombre}</h5>
-        <div class="menu-item-price responsive-price">$${plato.precio.toLocaleString()}</div>
-        <p class="menu-item-description responsive-description">${plato.descripcion}</p>
-        <div class="text-muted responsive-info">
-            <small><i class="fas fa-info-circle me-1"></i>Consulte disponibilidad con su mesero</small>
         </div>
-    </div>
-`;
+        <div class="menu-item-body">
+            <h5 class="menu-item-title">${plato.nombre}</h5>
+            <div class="menu-item-price">$${plato.precio.toLocaleString()}</div>
+            <p class="menu-item-description">${plato.descripcion}</p>
+            <div class="text-muted">
+                <small><i class="fas fa-info-circle me-1"></i>Consulte disponibilidad con su mesero</small>
+            </div>
+        </div>
+    `;
 
     col.appendChild(card);
     return col;
@@ -225,7 +203,7 @@ const generarGridMesas = () => {
 
     mesas.forEach(mesa => {
         const mesaElement = document.createElement('div');
-        mesaElement.className = `table - item ${mesa.estado} `;
+        mesaElement.className = `table-item ${mesa.estado}`;
 
         // Icono según capacidad
         let icono = 'fas fa-user';
@@ -236,12 +214,12 @@ const generarGridMesas = () => {
         }
 
         mesaElement.innerHTML = `
-    < div >
+            <div>
                 <i class="${icono} mb-1"></i>
                 <div style="font-weight: bold;">Mesa ${mesa.id}</div>
                 <small>${mesa.capacidad} personas</small>
-            </div >
-    `;
+            </div>
+        `;
 
         // Tooltip
         mesaElement.setAttribute('title', `Mesa ${mesa.id} - ${getEstadoTexto(mesa.estado)} - ${mesa.capacidad} personas`);
