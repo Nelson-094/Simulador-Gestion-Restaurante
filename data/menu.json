@@ -6,7 +6,7 @@
       "precio": 18000,
       "descripcion": "Fresca y liviana con pollo grillado",
       "categoria": "entradas",
-      "imagen": "../assets/img/ensalada-cesar.png"
+      "imagen": "./assets/img/ensalada-cesar.png"
     },
     {
       "id": 2,
@@ -14,7 +14,7 @@
       "precio": 8500,
       "descripcion": "Pan tostado con tomate, ajo y albahaca",
       "categoria": "entradas",
-      "imagen": "../assets/img/bruschetta.png"
+      "imagen": "./assets/img/bruschetta.png"
     },
     {
       "id": 3,
