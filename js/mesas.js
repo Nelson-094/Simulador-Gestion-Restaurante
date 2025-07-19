@@ -1,6 +1,4 @@
-// ============================================
 // GESTIÓN DE MESAS - SISTEMA RESTAURANTE
-// ============================================
 
 // Variables globales
 let usuarioActual = null;
@@ -8,15 +6,13 @@ let mesas = [];
 let empleados = [];
 let mesaSeleccionada = null;
 
-// ============================================
 // FUNCIONES DE INICIALIZACIÓN
-// ============================================
 
 // Verificar autenticación
 const verificarAutenticacion = () => {
     const sesion = localStorage.getItem('sesionRestaurante');
     if (!sesion) {
-        window.location.href = 'index.html';
+        window.location.href = '../index.html';
         return false;
     }
 
@@ -52,9 +48,7 @@ const configurarEventos = () => {
     document.getElementById('nuevo-estado').addEventListener('change', manejarCambioEstado);
 };
 
-// ============================================
 // FUNCIONES DE CARGA DE DATOS
-// ============================================
 
 // Cargar todos los datos
 const cargarDatos = async () => {
@@ -106,7 +100,7 @@ const cargarMesas = async () => {
 // Cargar empleados
 const cargarEmpleados = async () => {
     try {
-        const response = await fetch('./empleados.json');
+        const response = await fetch('../data/empleados.json');
         const data = await response.json();
         empleados = data.empleados.filter(emp => emp.rol === 'mesero' && emp.activo);
 
@@ -127,9 +121,7 @@ const cargarEmpleados = async () => {
     }
 };
 
-// ============================================
 // FUNCIONES DE INTERFAZ
-// ============================================
 
 // Generar grid de mesas
 const generarGridMesas = () => {
@@ -153,6 +145,7 @@ const generarGridMesas = () => {
                 <small>${mesa.capacidad} pers.</small>
                 <small>${mesa.ubicacion}</small>
                 ${meseroInfo}
+                ${mesa.nombreReserva ? `<small class="weight"> 📋${mesa.nombreReserva}</small>` : ''}
             </div>
         `;
 
@@ -220,9 +213,7 @@ const actualizarTiempo = () => {
     document.getElementById('ultima-actualizacion').textContent = timeString;
 };
 
-// ============================================
 // FUNCIONES DE GESTIÓN DE MESAS
-// ============================================
 
 // Abrir modal para gestionar mesa
 const abrirModalGestionar = (mesa) => {
@@ -263,11 +254,18 @@ const abrirModalGestionar = (mesa) => {
 const manejarCambioEstado = (e) => {
     const nuevoEstado = e.target.value;
     const divMesero = document.getElementById('div-asignar-mesero');
+    const divReserva = document.getElementById('div-nombre-reserva');
 
     if (nuevoEstado === 'ocupada') {
         divMesero.style.display = 'block';
+        divReserva.style.display = 'none';
+
+    } else if (nuevoEstado === 'reservada') {
+        divMesero.style.display = 'none';
+        divReserva.style.display = 'block';
     } else {
         divMesero.style.display = 'none';
+        divReserva.style.display = 'none';
     }
 };
 
@@ -302,7 +300,11 @@ const guardarCambiosMesa = () => {
     if (mesa) {
         mesa.estado = nuevoEstado;
         mesa.meseroAsignado = nuevoEstado === 'ocupada' ? parseInt(meseroAsignado) : null;
-        mesa.fechaUltimaOcupacion = nuevoEstado === 'ocupada' ? new Date().toISOString() : mesa.fechaUltimaOcupacion;
+        if (nuevoEstado === 'reservada') {
+            const nombreReserva = document.getElementById('nombre-reserva').value;
+            mesa.nombreReserva = nombreReserva;
+            mesa.fechaUltimaOcupacion = nuevoEstado === 'ocupada' ? new Date().toISOString() : mesa.fechaUltimaOcupacion;
+        }
 
         // Guardar estado
         guardarEstadoMesas();
@@ -378,9 +380,7 @@ const actualizarMesas = async () => {
     }
 };
 
-// ============================================
 // FUNCIONES UTILITARIAS
-// ============================================
 
 // Obtener texto del estado
 const getEstadoTexto = (estado) => {
@@ -406,23 +406,19 @@ const cerrarSesion = () => {
     }).then((result) => {
         if (result.isConfirmed) {
             localStorage.removeItem('sesionRestaurante');
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         }
     });
 };
 
-// ============================================
 // FUNCIONES DE PERSISTENCIA
-// ============================================
 
 // Guardar estado de mesas
 const guardarEstadoMesas = () => {
     localStorage.setItem('estadoMesas', JSON.stringify(mesas));
 };
 
-// ============================================
 // INICIALIZACIÓN
-// ============================================
 
 // Inicializar cuando el DOM esté listo
 if (document.readyState === 'loading') {

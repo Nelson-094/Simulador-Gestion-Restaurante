@@ -2,51 +2,97 @@
   "platos": [
     {
       "id": 1,
-      "nombre": "Milanesa con papas",
-      "precio": 2500,
-      "descripcion": "Clásica milanesa con papas fritas doradas",
-      "categoria": "platos principales",
-      "imagen": "assets/img/milanesa.jpg"
+      "nombre": "Ensalada César",
+      "precio": 18000,
+      "descripcion": "Fresca y liviana con pollo grillado",
+      "categoria": "entradas",
+      "imagen": "../assets/img/ensalada-cesar.png"
     },
     {
       "id": 2,
-      "nombre": "Ravioles con tuco",
-      "precio": 2300,
-      "descripcion": "Pasta casera con salsa de tomate y albahaca",
-      "categoria": "pastas",
-      "imagen": "assets/img/ravioles.jpg"
+      "nombre": "Bruschetta Clásica",
+      "precio": 8500,
+      "descripcion": "Pan tostado con tomate, ajo y albahaca",
+      "categoria": "entradas",
+      "imagen": "../assets/img/bruschetta.png"
     },
     {
       "id": 3,
-      "nombre": "Hamburguesa completa",
-      "precio": 2000,
-      "descripcion": "Con cheddar, lechuga, tomate y papas fritas",
-      "categoria": "comida rápida",
-      "imagen": "assets/img/hamburguesa.jpg"
+      "nombre": "Tabla de Fiambres",
+      "precio": 15000,
+      "descripcion": "Selección de quesos y fiambres regionales",
+      "categoria": "entradas",
+      "imagen": "../assets/img/fiambres-tabla.png"
     },
     {
       "id": 4,
-      "nombre": "Ensalada César",
-      "precio": 1800,
-      "descripcion": "Fresca y liviana con pollo grillado",
-      "categoria": "ensaladas",
-      "imagen": "assets/img/ensalada.jpg"
+      "nombre": "Milanesa con papas",
+      "precio": 25000,
+      "descripcion": "Clásica milanesa con papas fritas doradas",
+      "categoria": "platos principales",
+      "imagen": "../assets/img/milanesa-papas.png"
     },
     {
       "id": 5,
-      "nombre": "Pizza Margherita",
-      "precio": 2200,
-      "descripcion": "Con mozzarella, tomate y albahaca fresca",
-      "categoria": "pizzas",
-      "imagen": "assets/img/pizza.jpg"
+      "nombre": "Bife de chorizo",
+      "precio": 32000,
+      "descripcion": "Corte premium con guarnición a elección",
+      "categoria": "platos principales",
+      "imagen": "../assets/img/bife-chorizo.png"
     },
     {
       "id": 6,
-      "nombre": "Bife de chorizo",
-      "precio": 3200,
-      "descripcion": "Corte premium con guarnición a elección",
-      "categoria": "carnes",
-      "imagen": "assets/img/bife.jpg"
+      "nombre": "Pizza Margherita",
+      "precio": 22000,
+      "descripcion": "Con mozzarella, tomate y albahaca fresca",
+      "categoria": "platos principales",
+      "imagen": "../assets/img/pizza-margherita.png"
+    },
+    {
+      "id": 7,
+      "nombre": "Tiramisú",
+      "precio": 8000,
+      "descripcion": "Clásico postre italiano con café y mascarpone",
+      "categoria": "postres",
+      "imagen": "../assets/img/tiramisu.png"
+    },
+    {
+      "id": 8,
+      "nombre": "Flan casero",
+      "precio": 6500,
+      "descripcion": "Con dulce de leche artesanal",
+      "categoria": "postres",
+      "imagen": "../assets/img/flan-casero.png"
+    },
+    {
+      "id": 9,
+      "nombre": "Helado artesanal",
+      "precio": 7000,
+      "descripcion": "Tres bochas de sabores a elección",
+      "categoria": "postres",
+      "imagen": "../assets/img/helado-artesanal.png"
+    },
+    {
+      "id": 10,
+      "nombre": "Vino Tinto",
+      "precio": 8500,
+      "descripcion": "Copa de Malbec de la casa",
+      "categoria": "bebidas",
+      "imagen": "../assets/img/vino-tinto.png"
+    },
+    {
+      "id": 11,
+      "nombre": "Agua Mineral",
+      "precio": 3000,
+      "descripcion": "Con o sin gas, 500ml",
+      "categoria": "bebidas"
+    },
+    {
+      "id": 12,
+      "nombre": "Gaseosa",
+      "precio": 4500,
+      "descripcion": "Coca Cola, Sprite o Fanta",
+      "categoria": "bebidas"
     }
   ]
 }

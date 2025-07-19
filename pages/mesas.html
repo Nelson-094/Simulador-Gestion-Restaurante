@@ -15,6 +15,10 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.32/sweetalert2.min.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <!-- Icono -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
 </head>
 
 <body>
@@ -31,13 +35,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/index.html">Tomar Pedidos</a>
+                        <a class="nav-link" href="./empleados.html">Tomar Pedidos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/pages/mesas.html">Gestionar Mesas</a>
+                        <a class="nav-link active" href="./mesas.html">Gestionar Mesas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/pages/clientes.html">Ver Menú Cliente</a>
+                        <a class="nav-link" href="./clientes.html">Inicio</a>
                     </li>
                 </ul>
                 <div class="navbar-nav">
@@ -95,7 +99,6 @@
                     </div>
                     <div class="card-body">
                         <div id="mis-mesas-hoy">
-                            <!-- Generado dinámicamente -->
                         </div>
                     </div>
                 </div>
@@ -133,7 +136,6 @@
                         </div>
 
                         <div class="table-grid" id="table-grid">
-                            <!-- Generado dinámicamente -->
                         </div>
                     </div>
                 </div>
@@ -176,6 +178,14 @@
                             <option value="ocupada">Ocupada</option>
                             <option value="reservada">Reservada</option>
                         </select>
+
+                        <!-- Agregar DESPUÉS del select de nuevo estado -->
+                        <div class="mb-3" id="div-nombre-reserva" style="display: none;">
+                            <label for="nombre-reserva" class="form-label">Nombre para la reserva:</label>
+                            <input type="text" class="form-control" id="nombre-reserva" placeholder="Ej: Juan Pérez">
+                        </div>
+
+
                     </div>
 
                     <div class="mb-3" id="div-asignar-mesero" style="display: none;">

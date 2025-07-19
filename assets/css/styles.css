@@ -869,3 +869,47 @@ footer {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
 }
+
+.responsive-img {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    /* altura base */
+}
+
+.img-responsive {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.responsive-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+    .responsive-img {
+        height: 150px;
+    }
+
+    .responsive-icon {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .responsive-img {
+        height: 120px;
+    }
+
+    .responsive-icon {
+        font-size: 1.2rem;
+    }
+}

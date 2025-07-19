@@ -1,14 +1,10 @@
-// ============================================
 // LANDING PAGE - RESTAURANTE JS
-// ============================================
 
 // Variables globales
 let menu = [];
 let mesas = [];
 
-// ============================================
 // FUNCIONES DE INICIALIZACIÓN
-// ============================================
 
 // Inicializar aplicación
 const inicializarApp = () => {
@@ -47,9 +43,7 @@ const configurarEventos = () => {
     window.addEventListener('scroll', actualizarNavbarActivo);
 };
 
-// ============================================
 // FUNCIONES DE CARGA DE DATOS
-// ============================================
 
 // Cargar todos los datos
 const cargarDatos = async () => {
@@ -139,30 +133,28 @@ const cargarMesas = async () => {
     }
 };
 
-// ============================================
 // FUNCIONES DE INTERFAZ - MENÚ
-// ============================================
 
-// Generar HTML del menú
-const generarMenuHTML = () => {
-    const categorias = ['entradas', 'platos principales', 'postres', 'bebidas'];
+// Generar HTML del menú por categoría específica
+const generarMenuHTML = (categoriaEspecifica = null) => {
+    const categorias = categoriaEspecifica ? [categoriaEspecifica] : ['entradas', 'platos principales', 'postres', 'bebidas'];
 
     categorias.forEach(categoria => {
         const container = document.getElementById(`${categoria.replace(' ', '-')}-container`);
         if (container) {
+            // ✅ SIEMPRE limpiar el contenedor
             container.innerHTML = '';
 
             const platosCategoria = menu.filter(plato => plato.categoria === categoria);
 
             if (platosCategoria.length === 0) {
                 container.innerHTML = '<div class="col-12"><p class="text-muted text-center">No hay platos disponibles en esta categoría</p></div>';
-                return;
+            } else {
+                platosCategoria.forEach(plato => {
+                    const platoHTML = crearTarjetaPlato(plato);
+                    container.appendChild(platoHTML);
+                });
             }
-
-            platosCategoria.forEach(plato => {
-                const platoHTML = crearTarjetaPlato(plato);
-                container.appendChild(platoHTML);
-            });
         }
     });
 };
@@ -186,26 +178,27 @@ const crearTarjetaPlato = (plato) => {
     const icono = iconos[plato.categoria] || 'fas fa-utensils';
 
     card.innerHTML = `
-        <div class="menu-img">
-            <i class="${icono}" style="font-size: 2.5rem; color: var(--primary);"></i>
+    <div class="menu-img responsive-img">
+        ${plato.imagen ?
+            `<img src="${plato.imagen}" alt="${plato.nombre}" class="img-responsive">` :
+            `<i class="fas fa-utensils responsive-icon"></i>`
+        }
+    </div>
+    <div class="menu-item-body responsive-body">
+        <h5 class="menu-item-title responsive-title">${plato.nombre}</h5>
+        <div class="menu-item-price responsive-price">$${plato.precio.toLocaleString()}</div>
+        <p class="menu-item-description responsive-description">${plato.descripcion}</p>
+        <div class="text-muted responsive-info">
+            <small><i class="fas fa-info-circle me-1"></i>Consulte disponibilidad con su mesero</small>
         </div>
-        <div class="menu-item-body">
-            <h5 class="menu-item-title">${plato.nombre}</h5>
-            <div class="menu-item-price">$${plato.precio.toLocaleString()}</div>
-            <p class="menu-item-description">${plato.descripcion}</p>
-            <div class="text-muted">
-                <small><i class="fas fa-info-circle me-1"></i>Consulte disponibilidad con su mesero</small>
-            </div>
-        </div>
-    `;
+    </div>
+`;
 
     col.appendChild(card);
     return col;
 };
 
-// ============================================
 // FUNCIONES DE INTERFAZ - MESAS
-// ============================================
 
 // Generar grid de mesas
 const generarGridMesas = () => {
@@ -214,7 +207,7 @@ const generarGridMesas = () => {
 
     mesas.forEach(mesa => {
         const mesaElement = document.createElement('div');
-        mesaElement.className = `table-item ${mesa.estado}`;
+        mesaElement.className = `table - item ${mesa.estado} `;
 
         // Icono según capacidad
         let icono = 'fas fa-user';
@@ -225,12 +218,12 @@ const generarGridMesas = () => {
         }
 
         mesaElement.innerHTML = `
-            <div>
+    < div >
                 <i class="${icono} mb-1"></i>
                 <div style="font-weight: bold;">Mesa ${mesa.id}</div>
                 <small>${mesa.capacidad} personas</small>
-            </div>
-        `;
+            </div >
+    `;
 
         // Tooltip
         mesaElement.setAttribute('title', `Mesa ${mesa.id} - ${getEstadoTexto(mesa.estado)} - ${mesa.capacidad} personas`);
@@ -266,9 +259,7 @@ const actualizarEstadisticas = () => {
     document.getElementById('ultima-actualizacion-cliente').textContent = timeString;
 };
 
-// ============================================
 // FUNCIONES DE AUTENTICACIÓN
-// ============================================
 
 // Mostrar modal de login
 const mostrarModalLogin = () => {
@@ -301,7 +292,7 @@ const manejarLogin = async (e) => {
             Swal.fire({
                 icon: 'success',
                 title: '¡Bienvenido!',
-                text: `Hola ${empleado.nombre}`,
+                text: `Hola ${empleado.nombre} `,
                 timer: 1500,
                 showConfirmButton: false
             }).then(() => {
@@ -360,9 +351,7 @@ const cargarEmpleados = async () => {
     }
 };
 
-// ============================================
 // FUNCIONES DE NAVEGACIÓN
-// ============================================
 
 // Actualizar navbar activo según scroll
 const actualizarNavbarActivo = () => {
@@ -381,15 +370,13 @@ const actualizarNavbarActivo = () => {
 
     navLinks.forEach(link => {
         link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
+        if (link.getAttribute('href') === `#${current} `) {
             link.classList.add('active');
         }
     });
 };
 
-// ============================================
 // FUNCIONES UTILITARIAS
-// ============================================
 
 // Actualizar disponibilidad
 const actualizarDisponibilidad = async () => {
@@ -472,14 +459,14 @@ const verificarHorario = () => {
 const mostrarNotificacion = (mensaje, tipo = 'info') => {
     // Crear elemento de notificación
     const notification = document.createElement('div');
-    notification.className = `alert alert-${tipo} alert-dismissible fade show position-fixed`;
+    notification.className = `alert alert - ${tipo} alert - dismissible fade show position - fixed`;
     notification.style.cssText = `
-        top: 20px;
-        right: 20px;
-        z-index: 1050;
-        min-width: 300px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    `;
+top: 20px;
+right: 20px;
+z - index: 1050;
+min - width: 300px;
+box - shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+`;
 
     const iconos = {
         'success': 'fas fa-check-circle',
@@ -489,10 +476,10 @@ const mostrarNotificacion = (mensaje, tipo = 'info') => {
     };
 
     notification.innerHTML = `
-        <i class="${iconos[tipo] || iconos.info} me-2"></i>
+    < i class="${iconos[tipo] || iconos.info} me-2" ></i >
         ${mensaje}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
+<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+`;
 
     document.body.appendChild(notification);
 
@@ -501,7 +488,7 @@ const mostrarNotificacion = (mensaje, tipo = 'info') => {
         if (notification.parentNode) {
             notification.remove();
         }
-    }, 3000);
+    }, 100);
 };
 
 // Mostrar error
@@ -509,9 +496,7 @@ const mostrarError = (mensaje) => {
     mostrarNotificacion(mensaje, 'error');
 };
 
-// ============================================
 // ANIMACIONES Y EFECTOS
-// ============================================
 
 // Agregar animación al hacer scroll
 const agregarAnimacionScroll = () => {
@@ -551,9 +536,7 @@ const inicializarParallax = () => {
     });
 };
 
-// ============================================
 // INICIALIZACIÓN
-// ============================================
 
 // Inicializar cuando el DOM esté listo
 if (document.readyState === 'loading') {

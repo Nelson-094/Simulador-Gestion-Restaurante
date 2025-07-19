@@ -65,7 +65,7 @@ const cargarDatos = async () => {
 // Cargar menú
 const cargarMenu = async () => {
     try {
-        const response = await fetch('data/menu.json');
+        const response = await fetch('../data/menu.json');
         const data = await response.json();
         menu = data.platos;
     } catch (error) {
@@ -162,8 +162,11 @@ const crearTarjetaPlato = (plato) => {
     const icono = iconos[plato.categoria] || 'fas fa-utensils';
 
     card.innerHTML = `
-        <div class="menu-img">
-            <i class="${icono}" style="font-size: 2.5rem; color: var(--primary);"></i>
+    <div class="menu-img">
+        ${plato.imagen ?
+            `<img src="${plato.imagen}" alt="${plato.nombre}" style="width: 100%; height: 100%; object-fit: cover;">` :
+            `<i class="fas fa-utensils" style="font-size: 2rem; color: var(--primary);"></i>`
+        }
         </div>
         <div class="menu-item-body">
             <h5 class="menu-item-title">${plato.nombre}</h5>
