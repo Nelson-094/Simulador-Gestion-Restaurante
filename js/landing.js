@@ -63,10 +63,10 @@ const cargarDatos = async () => {
     }
 };
 
- // Cargar Menú 
+// Cargar Menú
 async function cargarMenu() {
     try {
-        const response = await fetch('./data/menu.json');
+        const response = await fetch('../data/menu.json');
         const menu = await response.json();
 
         const categorias = ['entradas', 'platos-principales', 'postres', 'bebidas'];
@@ -102,38 +102,38 @@ async function cargarMenu() {
 }
 
 // Cargar Disponibilidad de Mesas
-//async function cargarMesas() {
-//    try {
-//        const response = await fetch('./data/mesas.json');
-//        const mesas = await response.json();
-//
- //       const contenedor = document.getElementById('table-grid-cliente');
- //       contenedor.innerHTML = '';
-//
-  //      let disponibles = 0;
-    //    let ocupadas = 0;
-    //    let reservadas = 0;
+async function cargarMesas() {
+    try {
+        const response = await fetch('../data/mesas.json');
+        const mesas = await response.json();
 
-//        mesas.forEach(mesa => {
-//            const div = document.createElement('div');
-//            div.classList.add('mesa', mesa.estado);
-//            div.textContent = mesa.numero;
-//            contenedor.appendChild(div);
+        const contenedor = document.getElementById('table-grid-cliente');
+        contenedor.innerHTML = '';
 
-//            if (mesa.estado === 'libre') disponibles++;
-//            else if (mesa.estado === 'ocupada') ocupadas++;
-//            else if (mesa.estado === 'reservada') reservadas++;
-//        });
+        let disponibles = 0;
+        let ocupadas = 0;
+        let reservadas = 0;
 
-//        document.getElementById('mesas-disponibles').textContent = disponibles;
-//        document.getElementById('mesas-ocupadas-cliente').textContent = ocupadas;
-//        document.getElementById('mesas-reservadas-cliente').textContent = reservadas;
-//        document.getElementById('ultima-actualizacion-cliente').textContent = new Date().toLocaleTimeString();
-//
-//    } catch (error) {
-//        console.error('Error al cargar las mesas:', error);
-//    }
-//} //
+        mesas.forEach(mesa => {
+            const div = document.createElement('div');
+            div.classList.add('mesa', mesa.estado);
+            div.textContent = mesa.numero;
+            contenedor.appendChild(div);
+
+            if (mesa.estado === 'libre') disponibles++;
+            else if (mesa.estado === 'ocupada') ocupadas++;
+            else if (mesa.estado === 'reservada') reservadas++;
+        });
+
+        document.getElementById('mesas-disponibles').textContent = disponibles;
+        document.getElementById('mesas-ocupadas-cliente').textContent = ocupadas;
+        document.getElementById('mesas-reservadas-cliente').textContent = reservadas;
+        document.getElementById('ultima-actualizacion-cliente').textContent = new Date().toLocaleTimeString();
+
+    } catch (error) {
+        console.error('Error al cargar las mesas:', error);
+    }
+}
 
 // Botón "Actualizar disponibilidad"
 document.addEventListener('DOMContentLoaded', () => {
