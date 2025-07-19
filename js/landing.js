@@ -18,7 +18,7 @@ const inicializarApp = () => {
 
 // Configurar eventos
 const configurarEventos = () => {
-    
+
     // Login de empleados
     document.getElementById('btn-login-empleados').addEventListener('click', mostrarModalLogin);
     document.getElementById('login-form').addEventListener('submit', manejarLogin);
@@ -67,7 +67,7 @@ const cargarDatos = async () => {
 // Cargar menú
 const cargarMenu = async () => {
     try {
-        const response = await fetch('../data/menu.json');
+        const response = await fetch('./data/menu.json');
         const data = await response.json();
         menu = data.platos;
     } catch (error) {
@@ -103,7 +103,7 @@ const cargarMesas = async () => {
         }
 
         // Si no hay estado guardado, cargar desde JSON
-        const response = await fetch('../data/mesas.json');
+        const response = await fetch('./data/mesas.json');
         const data = await response.json();
         mesas = data.mesas;
 
