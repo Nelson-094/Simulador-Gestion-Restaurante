@@ -67,7 +67,7 @@ const cargarDatos = async () => {
 // Cargar menú
 const cargarMenu = async () => {
     try {
-        const response = await fetch('./data/menu.json');
+        const response = await fetch('../data/menu.json');
         const data = await response.json();
         menu = data.platos;
     } catch (error) {
