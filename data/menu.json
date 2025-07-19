@@ -6,7 +6,7 @@
       "precio": 18000,
       "descripcion": "Fresca y liviana con pollo grillado",
       "categoria": "entradas",
-      "imagen": "/Simulador-Gestion-Restaurante/assets/img/ensalada-cesar.png"
+      "imagen": "assets/img/ensalada-cesar.png"
     },
     {
       "id": 2,
