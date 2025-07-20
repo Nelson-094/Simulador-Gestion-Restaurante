@@ -1,449 +1,303 @@
 // LANDING PAGE - RESTAURANTE JS
+// Archivo principal para la página de inicio
 
-// Variables globales
-let menu = [];
-let mesas = [];
+var menuCompleto = [];
+var listaDeMesas = [];
 
-// 🎯 FUNCIÓN UNIVERSAL PARA RUTAS - AGREGAR AL INICIO DE CADA JS
-const construirRutaImagen = (rutaImagen) => {
+// Función para obtener rutas de imágenes
+function obtenerRutaImagen(rutaImagen) {
     if (!rutaImagen) return null;
-    
-    // Detectar automáticamente la ubicación
-    const estaEnPages = window.location.pathname.includes('/pages/');
-    
-    return estaEnPages ? `../${rutaImagen}` : `./${rutaImagen}`;
-};
-
-// FUNCIONES DE INICIALIZACIÓN
+    var estaEnPages = window.location.pathname.indexOf('/pages/') !== -1;
+    return estaEnPages ? '../' + rutaImagen : './' + rutaImagen;
+}
 
 // Inicializar aplicación
-const inicializarApp = () => {
+function inicializar() {
     cargarDatos();
     configurarEventos();
     verificarHorario();
-
-    // Actualizar disponibilidad cada 5 minutos
-    setInterval(actualizarDisponibilidad, 300000);
-};
+    setInterval(actualizarDisponibilidad, 300000); // 5 minutos
+}
 
 // Configurar eventos
-const configurarEventos = () => {
-
-    // Login de empleados
-    document.getElementById('btn-login-empleados').addEventListener('click', mostrarModalLogin);
-    document.getElementById('login-form').addEventListener('submit', manejarLogin);
-
-    // Actualizar disponibilidad
-    document.getElementById('actualizar-disponibilidad').addEventListener('click', actualizarDisponibilidad);
+function configurarEventos() {
+    document.getElementById('btn-login-empleados').onclick = mostrarLogin;
+    document.getElementById('login-form').onsubmit = procesarLogin;
+    document.getElementById('actualizar-disponibilidad').onclick = actualizarDisponibilidad;
 
     // Navegación suave
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+    var enlaces = document.querySelectorAll('a[href^="#"]');
+    for (var i = 0; i < enlaces.length; i++) {
+        enlaces[i].onclick = function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            var target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                target.scrollIntoView({ behavior: 'smooth' });
             }
-        });
-    });
-
-    // Cambiar navbar activo según scroll
-    window.addEventListener('scroll', actualizarNavbarActivo);
-};
-
-// FUNCIONES DE CARGA DE DATOS
-
-// Cargar todos los datos
-const cargarDatos = async () => {
-    try {
-        await Promise.all([
-            cargarMenu(),
-            cargarMesas()
-        ]);
-
-        generarMenuHTML();
-        generarGridMesas();
-        actualizarEstadisticas();
-
-    } catch (error) {
-        console.error('Error al cargar datos:', error);
-        mostrarError('Error al cargar los datos del menú');
+        };
     }
-};
 
-// Cargar menú
-const cargarMenu = async () => {
-    try {
-        const response = await fetch('./data/menu.json');
-        const data = await response.json();
-        menu = data.platos;
-    } catch (error) {
-        console.error('Error al cargar menú:', error);
-        // Datos de respaldo
-        menu = [
-            {
-                id: 1,
-                nombre: "Milanesa con papas",
-                precio: 2500,
-                descripcion: "Clásica milanesa con papas fritas",
-                categoria: "platos principales"
-            },
-            {
-                id: 2,
-                nombre: "Ensalada César",
-                precio: 1800,
-                descripcion: "Fresca y liviana",
-                categoria: "entradas"
-            }
-        ];
-    }
-};
+    // Navbar activo según scroll
+    window.onscroll = actualizarNavbar;
+}
 
-// Cargar mesas
-const cargarMesas = async () => {
-    try {
-        // Intentar cargar estado actual desde localStorage
-        const estadoGuardado = localStorage.getItem('estadoMesas');
-        if (estadoGuardado) {
-            mesas = JSON.parse(estadoGuardado);
-            return;
-        }
-
-        // Si no hay estado guardado, cargar desde JSON
-        const response = await fetch('./data/mesas.json');
-        const data = await response.json();
-        mesas = data.mesas;
-
-    } catch (error) {
-        console.error('Error al cargar mesas:', error);
-        // Datos de respaldo
-        mesas = [
-            { id: 1, capacidad: 2, estado: "libre" },
-            { id: 2, capacidad: 4, estado: "libre" }
-        ];
-    }
-};
-
-// Botón "Actualizar disponibilidad"
-document.addEventListener('DOMContentLoaded', () => {
+// Cargar datos
+function cargarDatos() {
     cargarMenu();
     cargarMesas();
+}
 
-    const btnActualizar = document.getElementById('actualizar-disponibilidad');
-    if (btnActualizar) {
-        btnActualizar.addEventListener('click', cargarMesas);
-    }
-});
-
-
-// FUNCIONES DE INTERFAZ - MENÚ
-
-// Generar HTML del menú
-const generarMenuHTML = () => {
-    const categorias = ['entradas', 'platos principales', 'postres', 'bebidas'];
-
-    categorias.forEach(categoria => {
-        const container = document.getElementById(`${categoria.replace(' ', '-')}-container`);
-        if (container) {
-            container.innerHTML = '';
-
-            const platosCategoria = menu.filter(plato => plato.categoria === categoria);
-
-            if (platosCategoria.length === 0) {
-                container.innerHTML = '<div class="col-12"><p class="text-muted text-center">No hay platos disponibles en esta categoría</p></div>';
-                return;
-            }
-
-            platosCategoria.forEach(plato => {
-                const platoHTML = crearTarjetaPlato(plato);
-                container.appendChild(platoHTML);
-            });
-        }
-    });
-};
-
-// Crear tarjeta de plato
-const crearTarjetaPlato = (plato) => {
-    const col = document.createElement('div');
-    col.className = 'col-md-6 col-lg-4';
-
-    const card = document.createElement('div');
-    card.className = 'menu-item animate-fade-in';
-
-    // Icono según categoría
-    const iconos = {
-        'entradas': 'fas fa-leaf',
-        'platos principales': 'fas fa-drumstick-bite',
-        'postres': 'fas fa-ice-cream',
-        'bebidas': 'fas fa-glass-cheers'
-    };
-
-    const icono = iconos[plato.categoria] || 'fas fa-utensils';
-
-    card.innerHTML = `
-    <div class="menu-img">
-        ${plato.imagen ?
-            `<img src="${construirRutaImagen(plato.imagen)}" alt="${plato.nombre}" style="width: 100%; height: 100%; object-fit: cover;">` :
-            `<i class="fas fa-utensils" style="font-size: 2rem; color: var(--primary);"></i>`
-        }
-        </div>
-        <div class="menu-item-body">
-            <h5 class="menu-item-title">${plato.nombre}</h5>
-            <div class="menu-item-price">$${plato.precio.toLocaleString()}</div>
-            <p class="menu-item-description">${plato.descripcion}</p>
-            <div class="text-muted">
-                <small><i class="fas fa-info-circle me-1"></i>Consulte disponibilidad con su mesero</small>
-            </div>
-        </div>
-    `;
-
-    col.appendChild(card);
-    return col;
-};
-
-// FUNCIONES DE INTERFAZ - MESAS
-
-// Generar grid de mesas
-const generarGridMesas = () => {
-    const container = document.getElementById('table-grid-cliente');
-    container.innerHTML = '';
-
-    mesas.forEach(mesa => {
-        const mesaElement = document.createElement('div');
-        mesaElement.className = `table-item ${mesa.estado}`;
-
-        // Icono según capacidad
-        let icono = 'fas fa-user';
-        if (mesa.capacidad > 4) {
-            icono = 'fas fa-users';
-        } else if (mesa.capacidad > 2) {
-            icono = 'fas fa-user-friends';
-        }
-
-        mesaElement.innerHTML = `
-            <div>
-                <i class="${icono} mb-1"></i>
-                <div style="font-weight: bold;">Mesa ${mesa.id}</div>
-                <small>${mesa.capacidad} personas</small>
-            </div>
-        `;
-
-        // Tooltip
-        mesaElement.setAttribute('title', `Mesa ${mesa.id} - ${getEstadoTexto(mesa.estado)} - ${mesa.capacidad} personas`);
-
-        container.appendChild(mesaElement);
-    });
-
-    // Inicializar tooltips si Bootstrap está disponible
-    if (typeof bootstrap !== 'undefined') {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+// Cargar menú
+function cargarMenu() {
+    fetch('./data/menu.json')
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            menuCompleto = data.platos;
+            setTimeout(mostrarMenu, 100);
+        })
+        .catch(function (error) {
+            console.log('Error cargando menú:', error);
+            menuCompleto = [
+                { id: 1, nombre: "Milanesa con papas", precio: 2500, descripcion: "Clásica milanesa", categoria: "platos principales" },
+                { id: 2, nombre: "Ensalada César", precio: 1800, descripcion: "Fresca y liviana", categoria: "entradas" }
+            ];
+            mostrarMenu();
         });
-    }
-};
+}
 
-// Actualizar estadísticas de mesas
-const actualizarEstadisticas = () => {
-    const disponibles = mesas.filter(m => m.estado === 'libre').length;
-    const ocupadas = mesas.filter(m => m.estado === 'ocupada').length;
-    const reservadas = mesas.filter(m => m.estado === 'reservada').length;
+// Cargar mesas
+function cargarMesas() {
+    var estadoGuardado = localStorage.getItem('estadoMesas');
+    if (estadoGuardado) {
+        listaDeMesas = JSON.parse(estadoGuardado);
+        mostrarMesas();
+        return;
+    }
+
+    fetch('./data/mesas.json')
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            listaDeMesas = data.mesas;
+            mostrarMesas();
+        })
+        .catch(function (error) {
+            console.log('Error cargando mesas:', error);
+            listaDeMesas = [
+                { id: 1, capacidad: 2, estado: "libre" },
+                { id: 2, capacidad: 4, estado: "libre" }
+            ];
+            mostrarMesas();
+        });
+}
+
+// Mostrar menú
+function mostrarMenu() {
+    var categorias = ['entradas', 'platos principales', 'postres', 'bebidas'];
+
+    for (var i = 0; i < categorias.length; i++) {
+        var categoria = categorias[i];
+        var contenedor = document.getElementById(categoria.replace(' ', '-') + '-container');
+        if (!contenedor) continue;
+
+        contenedor.innerHTML = '';
+
+        for (var j = 0; j < menuCompleto.length; j++) {
+            var plato = menuCompleto[j];
+            if (plato.categoria === categoria) {
+                var div = document.createElement('div');
+                div.className = 'col-md-6 col-lg-4';
+                div.innerHTML = '<div class="menu-item animate-fade-in">' +
+                    '<div class="menu-img">' +
+                    (plato.imagen ? '<img src="' + obtenerRutaImagen(plato.imagen) + '" alt="' + plato.nombre + '" style="width: 100%; height: 100%; object-fit: cover;">' : '<i class="fas fa-utensils" style="font-size: 2rem; color: var(--primary);"></i>') +
+                    '</div>' +
+                    '<div class="menu-item-body">' +
+                    '<h5 class="menu-item-title">' + plato.nombre + '</h5>' +
+                    '<div class="menu-item-price">$' + plato.precio.toLocaleString() + '</div>' +
+                    '<p class="menu-item-description">' + plato.descripcion + '</p>' +
+                    '<div class="text-muted">' +
+                    '<small><i class="fas fa-info-circle me-1"></i>Consulte disponibilidad con su mesero</small>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+                contenedor.appendChild(div);
+            }
+        }
+    }
+    document.querySelector('#entradas-tab').click();
+}
+
+// Mostrar mesas
+function mostrarMesas() {
+    var contenedor = document.getElementById('table-grid-cliente');
+    if (!contenedor) return;
+
+    contenedor.innerHTML = '';
+
+    for (var i = 0; i < listaDeMesas.length; i++) {
+        var mesa = listaDeMesas[i];
+        var div = document.createElement('div');
+        div.className = 'table-item ' + mesa.estado;
+
+        var icono = 'fas fa-user';
+        if (mesa.capacidad > 4) icono = 'fas fa-users';
+        else if (mesa.capacidad > 2) icono = 'fas fa-user-friends';
+
+        div.innerHTML = '<div>' +
+            '<i class="' + icono + ' mb-1"></i>' +
+            '<div style="font-weight: bold;">Mesa ' + mesa.id + '</div>' +
+            '<small>' + mesa.capacidad + ' personas</small>' +
+            '</div>';
+
+        div.title = 'Mesa ' + mesa.id + ' - ' + obtenerTextoEstado(mesa.estado) + ' - ' + mesa.capacidad + ' personas';
+        contenedor.appendChild(div);
+    }
+
+    actualizarEstadisticas();
+}
+
+// Actualizar estadísticas
+function actualizarEstadisticas() {
+    var disponibles = 0, ocupadas = 0, reservadas = 0;
+
+    for (var i = 0; i < listaDeMesas.length; i++) {
+        var estado = listaDeMesas[i].estado;
+        if (estado === 'libre') disponibles++;
+        else if (estado === 'ocupada') ocupadas++;
+        else if (estado === 'reservada') reservadas++;
+    }
 
     document.getElementById('mesas-disponibles').textContent = disponibles;
     document.getElementById('mesas-ocupadas-cliente').textContent = ocupadas;
     document.getElementById('mesas-reservadas-cliente').textContent = reservadas;
 
-    // Actualizar tiempo
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('es-AR', {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    document.getElementById('ultima-actualizacion-cliente').textContent = timeString;
-};
+    var ahora = new Date();
+    var hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('ultima-actualizacion-cliente').textContent = hora;
+}
 
-// FUNCIONES DE AUTENTICACIÓN
-
-// Mostrar modal de login
-const mostrarModalLogin = () => {
-    const modal = new bootstrap.Modal(document.getElementById('modal-login-empleados'));
+// Mostrar modal login
+function mostrarLogin() {
+    var modal = new bootstrap.Modal(document.getElementById('modal-login-empleados'));
     modal.show();
-};
+}
 
-// Manejar login
-const manejarLogin = async (e) => {
+// Procesar login
+function procesarLogin(e) {
     e.preventDefault();
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    var usuario = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
 
-    try {
-        const empleados = await cargarEmpleados();
-        const empleado = empleados.find(emp =>
-            emp.usuario === username && emp.password === password && emp.activo
-        );
-
-        if (empleado) {
-            // Guardar sesión
-            localStorage.setItem('sesionRestaurante', JSON.stringify(empleado));
-
-            // Cerrar modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modal-login-empleados'));
-            modal.hide();
-
-            // Mostrar notificación y redirigir
-            Swal.fire({
-                icon: 'success',
-                title: '¡Bienvenido!',
-                text: `Hola ${empleado.nombre} `,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                // Redirigir según el rol
-                if (empleado.rol === 'administrador') {
-                    window.location.href = 'pages/mesas.html';
-                } else {
-                    window.location.href = 'pages/empleados.html';
+    cargarEmpleados()
+        .then(function (empleados) {
+            var empleadoEncontrado = null;
+            for (var i = 0; i < empleados.length; i++) {
+                var emp = empleados[i];
+                if (emp.usuario === usuario && emp.password === password && emp.activo) {
+                    empleadoEncontrado = emp;
+                    break;
                 }
-            });
+            }
 
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error de autenticación',
-                text: 'Usuario o contraseña incorrectos'
-            });
-        }
-    } catch (error) {
-        console.error('Error al verificar credenciales:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error al conectar con el servidor'
+            if (empleadoEncontrado) {
+                localStorage.setItem('sesionRestaurante', JSON.stringify(empleadoEncontrado));
+
+                var modal = bootstrap.Modal.getInstance(document.getElementById('modal-login-empleados'));
+                modal.hide();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Bienvenido!',
+                    text: 'Hola ' + empleadoEncontrado.nombre,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(function () {
+                    if (empleadoEncontrado.rol === 'administrador') {
+                        window.location.href = 'pages/admin.html';
+                    } else {
+                        window.location.href = 'pages/empleados.html';
+                    }
+                });
+            } else {
+                Swal.fire('Error', 'Usuario o contraseña incorrectos', 'error');
+            }
+        })
+        .catch(function (error) {
+            console.log('Error:', error);
+            Swal.fire('Error', 'Error al conectar', 'error');
         });
-    }
-};
+}
 
 // Cargar empleados
-const cargarEmpleados = async () => {
-    try {
-        const response = await fetch('./data/empleados.json');
-        const data = await response.json();
-        return data.empleados;
-    } catch (error) {
-        console.error('Error al cargar empleados:', error);
-        // Datos de respaldo
-        return [
-            {
-                id: 1,
-                usuario: "mesero1",
-                password: "123456",
-                nombre: "Juan Pérez",
-                rol: "mesero",
-                activo: true
-            },
-            {
-                id: 2,
-                usuario: "admin",
-                password: "admin123",
-                nombre: "Administrador",
-                rol: "administrador",
-                activo: true
-            }
-        ];
+function cargarEmpleados() {
+    return fetch('./data/empleados.json')
+        .then(function (response) { return response.json(); })
+        .then(function (data) { return data.empleados; })
+        .catch(function (error) {
+            console.log('Error cargando empleados:', error);
+            return [
+                { id: 1, usuario: "mesero1", password: "123456", nombre: "Juan Pérez", rol: "mesero", activo: true },
+                { id: 2, usuario: "admin", password: "admin123", nombre: "Administrador", rol: "administrador", activo: true }
+            ];
+        });
+}
+
+// Actualizar navbar según scroll
+function actualizarNavbar() {
+    var secciones = document.querySelectorAll('section[id]');
+    var enlaces = document.querySelectorAll('.navbar-nav .nav-link');
+    var actual = '';
+
+    for (var i = 0; i < secciones.length; i++) {
+        var seccion = secciones[i];
+        if (window.pageYOffset >= (seccion.offsetTop - 200)) {
+            actual = seccion.getAttribute('id');
+        }
     }
-};
 
-// FUNCIONES DE NAVEGACIÓN
-
-// Actualizar navbar activo según scroll
-const actualizarNavbarActivo = () => {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    let current = '';
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - 200)) {
-            current = section.getAttribute('id');
+    for (var j = 0; j < enlaces.length; j++) {
+        enlaces[j].classList.remove('active');
+        if (enlaces[j].getAttribute('href') === '#' + actual) {
+            enlaces[j].classList.add('active');
         }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current} `) {
-            link.classList.add('active');
-        }
-    });
-};
-
-// FUNCIONES UTILITARIAS
+    }
+}
 
 // Actualizar disponibilidad
-const actualizarDisponibilidad = async () => {
-    try {
-        // Mostrar indicador de carga
-        const btn = document.getElementById('actualizar-disponibilidad');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Actualizando...';
-        btn.disabled = true;
+function actualizarDisponibilidad() {
+    var boton = document.getElementById('actualizar-disponibilidad');
+    var textoOriginal = boton.innerHTML;
+    boton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Actualizando...';
+    boton.disabled = true;
 
-        // Simular delay de red
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Intentar cargar estado actual
-        const estadoGuardado = localStorage.getItem('estadoMesas');
+    setTimeout(function () {
+        var estadoGuardado = localStorage.getItem('estadoMesas');
         if (estadoGuardado) {
-            mesas = JSON.parse(estadoGuardado);
-        } else {
-            // Cargar desde JSON si no hay estado guardado
-            await cargarMesas();
+            listaDeMesas = JSON.parse(estadoGuardado);
         }
 
-        // Actualizar interfaz
-        generarGridMesas();
-        actualizarEstadisticas();
+        mostrarMesas();
+        mostrarNotificacion('Disponibilidad actualizada correctamente');
 
-        // Mostrar notificación
-        mostrarNotificacion('Disponibilidad actualizada correctamente', 'success');
-
-        // Restaurar botón
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-
-    } catch (error) {
-        console.error('Error al actualizar disponibilidad:', error);
-        mostrarError('Error al actualizar la disponibilidad');
-
-        // Restaurar botón
-        const btn = document.getElementById('actualizar-disponibilidad');
-        btn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Actualizar';
-        btn.disabled = false;
-    }
-};
+        boton.innerHTML = textoOriginal;
+        boton.disabled = false;
+    }, 1000);
+}
 
 // Obtener texto del estado
-const getEstadoTexto = (estado) => {
-    switch (estado) {
-        case 'libre': return 'Disponible';
-        case 'ocupada': return 'Ocupada';
-        case 'reservada': return 'Reservada';
-        default: return 'Desconocido';
-    }
-};
+function obtenerTextoEstado(estado) {
+    if (estado === 'libre') return 'Disponible';
+    if (estado === 'ocupada') return 'Ocupada';
+    if (estado === 'reservada') return 'Reservada';
+    return 'Desconocido';
+}
 
 // Verificar horario
-const verificarHorario = () => {
-    const now = new Date();
-    const hora = now.getHours();
-
-    let estado = 'Abierto';
-    let clase = 'text-success';
+function verificarHorario() {
+    var ahora = new Date();
+    var hora = ahora.getHours();
+    var estado = 'Abierto';
+    var clase = 'text-success';
 
     if (hora < 12 || hora >= 24) {
         estado = 'Cerrado';
@@ -453,106 +307,66 @@ const verificarHorario = () => {
         clase = 'text-warning';
     }
 
-    // Si hay un elemento de horario, actualizarlo
-    const horarioElement = document.getElementById('horario-actual');
-    if (horarioElement) {
-        horarioElement.textContent = estado;
-        horarioElement.className = clase;
+    var elemento = document.getElementById('horario-actual');
+    if (elemento) {
+        elemento.textContent = estado;
+        elemento.className = clase;
     }
-};
+}
 
 // Mostrar notificación
-const mostrarNotificacion = (mensaje, tipo = 'info') => {
-    // Crear elemento de notificación
-    const notification = document.createElement('div');
-    notification.className = `alert alert - ${tipo} alert - dismissible fade show position - fixed`;
-    notification.style.cssText = `
-top: 20px;
-right: 20px;
-z - index: 1050;
-min - width: 300px;
-box - shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-`;
+function mostrarNotificacion(mensaje) {
+    var notificacion = document.createElement('div');
+    notificacion.className = 'alert alert-success alert-dismissible fade show position-fixed';
+    notificacion.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+    notificacion.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + mensaje +
+        '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
 
-    const iconos = {
-        'success': 'fas fa-check-circle',
-        'error': 'fas fa-exclamation-triangle',
-        'warning': 'fas fa-exclamation-circle',
-        'info': 'fas fa-info-circle'
-    };
+    document.body.appendChild(notificacion);
 
-    notification.innerHTML = `
-    < i class="${iconos[tipo] || iconos.info} me-2" ></i >
-        ${mensaje}
-<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-`;
-
-    document.body.appendChild(notification);
-
-    // Remover automáticamente después de 3 segundos
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
+    setTimeout(function () {
+        if (notificacion.parentNode) {
+            notificacion.remove();
         }
-    }, 100);
-};
+    }, 3000);
+}
 
-// Mostrar error
-const mostrarError = (mensaje) => {
-    mostrarNotificacion(mensaje, 'error');
-};
-
-// ANIMACIONES Y EFECTOS
-
-// Agregar animación al hacer scroll
-const agregarAnimacionScroll = () => {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in');
+// Efectos de animación
+function agregarAnimaciones() {
+    var observer = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+            if (entries[i].isIntersecting) {
+                entries[i].target.classList.add('animate-fade-in');
             }
+        }
+    });
+
+    var elementos = document.querySelectorAll('.menu-item, .contact-item');
+    for (var j = 0; j < elementos.length; j++) {
+        observer.observe(elementos[j]);
+    }
+}
+
+// Efecto parallax
+function iniciarParallax() {
+    var hero = document.querySelector('.hero');
+    if (hero) {
+        window.addEventListener('scroll', function () {
+            var scrolled = window.pageYOffset;
+            hero.style.transform = 'translateY(' + (scrolled * -0.5) + 'px)';
         });
-    }, observerOptions);
+    }
+}
 
-    // Observar elementos del menú
-    document.querySelectorAll('.menu-item').forEach(item => {
-        observer.observe(item);
-    });
-
-    // Observar elementos de contacto
-    document.querySelectorAll('.contact-item').forEach(item => {
-        observer.observe(item);
-    });
-};
-
-// Efecto parallax ligero en hero
-const inicializarParallax = () => {
-    const hero = document.querySelector('.hero');
-    if (!hero) return;
-
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5;
-        hero.style.transform = `translateY(${rate}px)`;
-    });
-};
-
-// INICIALIZACIÓN
-
-// Inicializar cuando el DOM esté listo
+// Inicializar cuando esté listo
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        inicializarApp();
-        agregarAnimacionScroll();
-        inicializarParallax();
+    document.addEventListener('DOMContentLoaded', function () {
+        inicializar();
+        agregarAnimaciones();
+        iniciarParallax();
     });
 } else {
-    inicializarApp();
-    agregarAnimacionScroll();
-    inicializarParallax();
+    inicializar();
+    agregarAnimaciones();
+    iniciarParallax();
 }

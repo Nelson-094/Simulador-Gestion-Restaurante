@@ -1,439 +1,394 @@
-// GESTIÓN DE MESAS - SISTEMA RESTAURANTE
+// GESTION DE MESAS - SISTEMA RESTAURANTE
+// Este archivo maneja la gestión de mesas
 
-// Variables globales
-let usuarioActual = null;
-let mesas = [];
-let empleados = [];
-let mesaSeleccionada = null;
+var usuarioLogueado = null;
+var mesasDelSistema = [];
+var empleadosDelSistema = [];
+var mesaSeleccionada = null;
 
-
-// 🎯 FUNCIÓN UNIVERSAL PARA RUTAS - AGREGAR AL INICIO DE CADA JS
-const construirRutaImagen = (rutaImagen) => {
+// Función para construir rutas de imágenes
+function obtenerRutaImagen(rutaImagen) {
     if (!rutaImagen) return null;
-
-    // Detectar automáticamente la ubicación
-    const estaEnPages = window.location.pathname.includes('/pages/');
-
-    return estaEnPages ? `../${rutaImagen}` : `./${rutaImagen}`;
-};
-
-// FUNCIONES DE INICIALIZACIÓN
+    var estaEnPages = window.location.pathname.indexOf('/pages/') !== -1;
+    return estaEnPages ? '../' + rutaImagen : './' + rutaImagen;
+}
 
 // Verificar autenticación
-const verificarAutenticacion = () => {
-    const sesion = localStorage.getItem('sesionRestaurante');
+function verificarLogin() {
+    var sesion = localStorage.getItem('sesionRestaurante');
     if (!sesion) {
         window.location.href = '../index.html';
         return false;
     }
-
-    usuarioActual = JSON.parse(sesion);
-    document.getElementById('nombre-usuario').textContent = usuarioActual.nombre;
+    usuarioLogueado = JSON.parse(sesion);
+    document.getElementById('nombre-usuario').textContent = usuarioLogueado.nombre;
     return true;
-};
+}
 
 // Inicializar aplicación
-const inicializarApp = () => {
-    if (!verificarAutenticacion()) return;
-
+function inicializar() {
+    if (!verificarLogin()) return;
     configurarEventos();
     cargarDatos();
-    actualizarTiempo();
-
-    // Actualizar tiempo cada minuto
-    setInterval(actualizarTiempo, 60000);
-};
+    actualizarHora();
+    setInterval(actualizarHora, 60000);
+}
 
 // Configurar eventos
-const configurarEventos = () => {
-    // Cerrar sesión
-    document.getElementById('cerrar-sesion').addEventListener('click', cerrarSesion);
+function configurarEventos() {
+    document.getElementById('cerrar-sesion').onclick = cerrarSesion;
+    document.getElementById('actualizar-mesas').onclick = actualizarMesas;
+    document.getElementById('guardar-cambios-mesa').onclick = guardarCambios;
+    document.getElementById('nuevo-estado').onchange = cambioEstado;
+}
 
-    // Actualizar mesas
-    document.getElementById('actualizar-mesas').addEventListener('click', actualizarMesas);
-
-    // Guardar cambios en modal
-    document.getElementById('guardar-cambios-mesa').addEventListener('click', guardarCambiosMesa);
-
-    // Cambio de estado en modal
-    document.getElementById('nuevo-estado').addEventListener('change', manejarCambioEstado);
-};
-
-// FUNCIONES DE CARGA DE DATOS
-
-// Cargar todos los datos
-const cargarDatos = async () => {
-    try {
-        await Promise.all([
-            cargarMesas(),
-            cargarEmpleados()
-        ]);
-
-        generarGridMesas();
-        actualizarResumen();
-        actualizarMisMesas();
-
-    } catch (error) {
-        console.error('Error al cargar datos:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error al cargar los datos del sistema'
-        });
-    }
-};
+// Cargar datos
+function cargarDatos() {
+    cargarMesas();
+    cargarEmpleados();
+}
 
 // Cargar mesas
-const cargarMesas = async () => {
-    try {
-        // Primero intentar cargar desde localStorage (estado actual)
-        const estadoGuardado = localStorage.getItem('estadoMesas');
-        if (estadoGuardado) {
-            mesas = JSON.parse(estadoGuardado);
-            return;
-        }
-
-        // Si no hay estado guardado, cargar desde JSON
-        const response = await fetch('../data/mesas.json');
-        const data = await response.json();
-        mesas = data.mesas;
-
-    } catch (error) {
-        console.error('Error al cargar mesas:', error);
-        // Datos de respaldo
-        mesas = [
-            { id: 1, capacidad: 2, estado: "libre", meseroAsignado: null, ubicacion: "Ventana" },
-            { id: 2, capacidad: 4, estado: "libre", meseroAsignado: null, ubicacion: "Centro" }
-        ];
+function cargarMesas() {
+    var estadoGuardado = localStorage.getItem('estadoMesas');
+    if (estadoGuardado) {
+        mesasDelSistema = JSON.parse(estadoGuardado);
+        mostrarTodo();
+        return;
     }
-};
+
+    fetch('../data/mesas.json')
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            mesasDelSistema = data.mesas;
+            mostrarTodo();
+        })
+        .catch(function (error) {
+            console.log('Error cargando mesas:', error);
+            mesasDelSistema = [
+                { id: 1, capacidad: 2, estado: "libre", meseroAsignado: null, ubicacion: "Ventana" },
+                { id: 2, capacidad: 4, estado: "libre", meseroAsignado: null, ubicacion: "Centro" }
+            ];
+            mostrarTodo();
+        });
+}
 
 // Cargar empleados
-const cargarEmpleados = async () => {
-    try {
-        const response = await fetch('../data/empleados.json');
-        const data = await response.json();
-        empleados = data.empleados.filter(emp => emp.rol === 'mesero' && emp.activo);
-
-        // Generar opciones para el select de meseros
-        const selectMesero = document.getElementById('asignar-mesero');
-        selectMesero.innerHTML = '<option value="">Seleccionar mesero...</option>';
-
-        empleados.forEach(empleado => {
-            const option = document.createElement('option');
-            option.value = empleado.id;
-            option.textContent = empleado.nombre;
-            selectMesero.appendChild(option);
+function cargarEmpleados() {
+    fetch('../data/empleados.json')
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            empleadosDelSistema = data.empleados.filter(function (emp) {
+                return emp.rol === 'mesero' && emp.activo;
+            });
+            llenarSelectMeseros();
+        })
+        .catch(function (error) {
+            console.log('Error cargando empleados:', error);
+            empleadosDelSistema = [];
         });
+}
 
-    } catch (error) {
-        console.error('Error al cargar empleados:', error);
-        empleados = [];
+// Llenar select de meseros
+function llenarSelectMeseros() {
+    var select = document.getElementById('asignar-mesero');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Seleccionar mesero...</option>';
+    for (var i = 0; i < empleadosDelSistema.length; i++) {
+        var empleado = empleadosDelSistema[i];
+        var option = document.createElement('option');
+        option.value = empleado.id;
+        option.textContent = empleado.nombre;
+        select.appendChild(option);
     }
-};
+}
 
-// FUNCIONES DE INTERFAZ
+// Mostrar todo
+function mostrarTodo() {
+    mostrarGrilla();
+    mostrarResumen();
+    mostrarMisMesas();
+}
 
-// Generar grid de mesas
-const generarGridMesas = () => {
-    const container = document.getElementById('table-grid');
-    container.innerHTML = '';
+// Mostrar grilla de mesas
+function mostrarGrilla() {
+    var contenedor = document.getElementById('table-grid');
+    if (!contenedor) return;
 
-    mesas.forEach(mesa => {
-        const mesaElement = document.createElement('div');
-        mesaElement.className = `table-item ${mesa.estado}`;
-        mesaElement.setAttribute('data-mesa-id', mesa.id);
+    contenedor.innerHTML = '';
 
-        let meseroInfo = '';
+    for (var i = 0; i < mesasDelSistema.length; i++) {
+        var mesa = mesasDelSistema[i];
+        var div = document.createElement('div');
+        div.className = 'table-item ' + mesa.estado;
+        div.setAttribute('data-mesa-id', mesa.id);
+
+        var meseroInfo = '';
         if (mesa.meseroAsignado) {
-            const mesero = empleados.find(emp => emp.id === mesa.meseroAsignado);
-            meseroInfo = mesero ? `<small>${mesero.nombre}</small>` : '';
+            for (var j = 0; j < empleadosDelSistema.length; j++) {
+                if (empleadosDelSistema[j].id === mesa.meseroAsignado) {
+                    meseroInfo = '<small>' + empleadosDelSistema[j].nombre + '</small>';
+                    break;
+                }
+            }
         }
 
-        mesaElement.innerHTML = `
-            <div>
-                <div style="font-weight: bold;">Mesa ${mesa.id}</div>
-                <small>${mesa.capacidad} pers.</small>
-                <small>${mesa.ubicacion}</small>
-                ${meseroInfo}
-                ${mesa.nombreReserva ? `<small class="weight"> 📋${mesa.nombreReserva}</small>` : ''}
-            </div>
-        `;
+        div.innerHTML = '<div>' +
+            '<div style="font-weight: bold;">Mesa ' + mesa.id + '</div>' +
+            '<small>' + mesa.capacidad + ' pers.</small>' +
+            '<small>' + mesa.ubicacion + '</small>' +
+            meseroInfo +
+            (mesa.nombreReserva ? '<small>📋' + mesa.nombreReserva + '</small>' : '') +
+            '</div>';
 
-        // Agregar evento click
-        mesaElement.addEventListener('click', () => abrirModalGestionar(mesa));
+        div.onclick = function () {
+            var mesaId = this.getAttribute('data-mesa-id');
+            for (var k = 0; k < mesasDelSistema.length; k++) {
+                if (mesasDelSistema[k].id == mesaId) {
+                    abrirModal(mesasDelSistema[k]);
+                    break;
+                }
+            }
+        };
 
-        container.appendChild(mesaElement);
-    });
-};
+        contenedor.appendChild(div);
+    }
+}
 
-// Actualizar resumen
-const actualizarResumen = () => {
-    const total = mesas.length;
-    const libres = mesas.filter(m => m.estado === 'libre').length;
-    const ocupadas = mesas.filter(m => m.estado === 'ocupada').length;
-    const reservadas = mesas.filter(m => m.estado === 'reservada').length;
+// Mostrar resumen
+function mostrarResumen() {
+    var total = mesasDelSistema.length;
+    var libres = 0, ocupadas = 0, reservadas = 0;
+
+    for (var i = 0; i < mesasDelSistema.length; i++) {
+        var estado = mesasDelSistema[i].estado;
+        if (estado === 'libre') libres++;
+        else if (estado === 'ocupada') ocupadas++;
+        else if (estado === 'reservada') reservadas++;
+    }
 
     document.getElementById('total-mesas').textContent = total;
     document.getElementById('mesas-libres').textContent = libres;
     document.getElementById('mesas-ocupadas').textContent = ocupadas;
     document.getElementById('mesas-reservadas').textContent = reservadas;
-};
+}
 
-// Actualizar mis mesas
-const actualizarMisMesas = () => {
-    const container = document.getElementById('mis-mesas-hoy');
-    const misMesas = mesas.filter(m => m.meseroAsignado === usuarioActual.id);
+// Mostrar mis mesas
+function mostrarMisMesas() {
+    var contenedor = document.getElementById('mis-mesas-hoy');
+    if (!contenedor) return;
+
+    var misMesas = mesasDelSistema.filter(function (mesa) {
+        return mesa.meseroAsignado === usuarioLogueado.id;
+    });
 
     if (misMesas.length === 0) {
-        container.innerHTML = '<p class="text-muted">No tienes mesas asignadas</p>';
+        contenedor.innerHTML = '<p class="text-muted">No tienes mesas asignadas</p>';
         return;
     }
 
-    container.innerHTML = '';
-    misMesas.forEach(mesa => {
-        const mesaElement = document.createElement('div');
-        mesaElement.className = `d-flex justify-content-between align-items-center mb-2 p-2 rounded ${mesa.estado}`;
-        mesaElement.style.backgroundColor = getEstadoColor(mesa.estado);
-        mesaElement.style.color = 'white';
-        mesaElement.innerHTML = `
-            <span>Mesa ${mesa.id}</span>
-            <span>${mesa.capacidad} pers.</span>
-        `;
-        container.appendChild(mesaElement);
-    });
-};
+    contenedor.innerHTML = '';
+    for (var i = 0; i < misMesas.length; i++) {
+        var mesa = misMesas[i];
+        var div = document.createElement('div');
+        div.className = 'd-flex justify-content-between align-items-center mb-2 p-2 rounded';
+        div.style.backgroundColor = obtenerColor(mesa.estado);
+        div.style.color = 'white';
+        div.innerHTML = '<span>Mesa ' + mesa.id + '</span><span>' + mesa.capacidad + ' pers.</span>';
+        contenedor.appendChild(div);
+    }
+}
 
 // Obtener color del estado
-const getEstadoColor = (estado) => {
-    switch (estado) {
-        case 'libre': return '#28a745';
-        case 'ocupada': return '#dc3545';
-        case 'reservada': return '#ffc107';
-        default: return '#6c757d';
-    }
-};
+function obtenerColor(estado) {
+    if (estado === 'libre') return '#28a745';
+    if (estado === 'ocupada') return '#dc3545';
+    if (estado === 'reservada') return '#ffc107';
+    return '#6c757d';
+}
 
-// Actualizar tiempo
-const actualizarTiempo = () => {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('es-AR', {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    document.getElementById('ultima-actualizacion').textContent = timeString;
-};
+// Actualizar hora
+function actualizarHora() {
+    var ahora = new Date();
+    var hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('ultima-actualizacion').textContent = hora;
+}
 
-// FUNCIONES DE GESTIÓN DE MESAS
-
-// Abrir modal para gestionar mesa
-const abrirModalGestionar = (mesa) => {
+// Abrir modal
+function abrirModal(mesa) {
     mesaSeleccionada = mesa;
 
-    // Llenar datos del modal
     document.getElementById('modal-mesa-numero').textContent = mesa.id;
-    document.getElementById('modal-capacidad').textContent = `${mesa.capacidad} personas`;
+    document.getElementById('modal-capacidad').textContent = mesa.capacidad + ' personas';
 
-    // Estado actual
-    const estadoElement = document.getElementById('modal-estado-actual');
-    estadoElement.textContent = getEstadoTexto(mesa.estado);
-    estadoElement.className = `current-status ${mesa.estado}`;
+    var estadoElement = document.getElementById('modal-estado-actual');
+    estadoElement.textContent = obtenerTextoEstado(mesa.estado);
+    estadoElement.className = 'current-status ' + mesa.estado;
 
-    // Información del mesero
-    const meseroInfo = document.getElementById('modal-mesero-info');
-    const meseroNombre = document.getElementById('modal-mesero-nombre');
-
+    var infoMesero = document.getElementById('modal-mesero-info');
     if (mesa.meseroAsignado) {
-        const mesero = empleados.find(emp => emp.id === mesa.meseroAsignado);
-        meseroNombre.textContent = mesero ? mesero.nombre : 'No encontrado';
-        meseroInfo.style.display = 'block';
+        var mesero = empleadosDelSistema.find(function (emp) { return emp.id === mesa.meseroAsignado; });
+        document.getElementById('modal-mesero-nombre').textContent = mesero ? mesero.nombre : 'No encontrado';
+        infoMesero.style.display = 'block';
     } else {
-        meseroInfo.style.display = 'none';
+        infoMesero.style.display = 'none';
     }
 
-    // Resetear selects
     document.getElementById('nuevo-estado').value = '';
     document.getElementById('asignar-mesero').value = '';
     document.getElementById('div-asignar-mesero').style.display = 'none';
 
-    // Mostrar modal
-    const modal = new bootstrap.Modal(document.getElementById('modal-gestionar-mesa'));
-    modal.show();
-};
+    var divReserva = document.getElementById('div-nombre-reserva');
+    if (divReserva) divReserva.style.display = 'none';
 
-// Manejar cambio de estado
-const manejarCambioEstado = (e) => {
-    const nuevoEstado = e.target.value;
-    const divMesero = document.getElementById('div-asignar-mesero');
-    const divReserva = document.getElementById('div-nombre-reserva');
+    var modal = new bootstrap.Modal(document.getElementById('modal-gestionar-mesa'));
+    modal.show();
+}
+
+// Cambio de estado
+function cambioEstado(evento) {
+    var nuevoEstado = evento.target.value;
+    var divMesero = document.getElementById('div-asignar-mesero');
+    var divReserva = document.getElementById('div-nombre-reserva');
 
     if (nuevoEstado === 'ocupada') {
         divMesero.style.display = 'block';
-        divReserva.style.display = 'none';
-
+        if (divReserva) divReserva.style.display = 'none';
     } else if (nuevoEstado === 'reservada') {
         divMesero.style.display = 'none';
-        divReserva.style.display = 'block';
+        if (divReserva) divReserva.style.display = 'block';
     } else {
         divMesero.style.display = 'none';
-        divReserva.style.display = 'none';
+        if (divReserva) divReserva.style.display = 'none';
     }
-};
+}
 
-// Guardar cambios de mesa
-const guardarCambiosMesa = () => {
+// Guardar cambios
+function guardarCambios() {
     if (!mesaSeleccionada) return;
 
-    const nuevoEstado = document.getElementById('nuevo-estado').value;
-    const meseroAsignado = document.getElementById('asignar-mesero').value;
+    var nuevoEstado = document.getElementById('nuevo-estado').value;
+    var meseroAsignado = document.getElementById('asignar-mesero').value;
 
     if (!nuevoEstado) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Selecciona un estado',
-            text: 'Debes seleccionar un nuevo estado para la mesa'
-        });
+        Swal.fire('Error', 'Selecciona un estado', 'warning');
         return;
     }
 
-    // Validar mesero si es necesario
     if (nuevoEstado === 'ocupada' && !meseroAsignado) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Asigna un mesero',
-            text: 'Debes asignar un mesero para marcar la mesa como ocupada'
-        });
+        Swal.fire('Error', 'Asigna un mesero', 'warning');
         return;
     }
 
-    // Actualizar mesa
-    const mesa = mesas.find(m => m.id === mesaSeleccionada.id);
-    if (mesa) {
-        mesa.estado = nuevoEstado;
-        mesa.meseroAsignado = nuevoEstado === 'ocupada' ? parseInt(meseroAsignado) : null;
-        if (nuevoEstado === 'reservada') {
-            const nombreReserva = document.getElementById('nombre-reserva').value;
-            mesa.nombreReserva = nombreReserva;
-            mesa.fechaUltimaOcupacion = nuevoEstado === 'ocupada' ? new Date().toISOString() : mesa.fechaUltimaOcupacion;
+    for (var i = 0; i < mesasDelSistema.length; i++) {
+        if (mesasDelSistema[i].id === mesaSeleccionada.id) {
+            mesasDelSistema[i].estado = nuevoEstado;
+            mesasDelSistema[i].meseroAsignado = nuevoEstado === 'ocupada' ? parseInt(meseroAsignado) : null;
+
+            if (nuevoEstado === 'reservada') {
+                var nombreReserva = document.getElementById('nombre-reserva');
+                if (nombreReserva) {
+                    mesasDelSistema[i].nombreReserva = nombreReserva.value;
+                }
+            } else {
+                mesasDelSistema[i].nombreReserva = null;
+            }
+            break;
         }
-
-        // Guardar estado
-        guardarEstadoMesas();
-
-        // Actualizar interfaz
-        generarGridMesas();
-        actualizarResumen();
-        actualizarMisMesas();
-
-        // Cerrar modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('modal-gestionar-mesa'));
-        modal.hide();
-
-        const meseroNombre = meseroAsignado ? empleados.find(emp => emp.id == meseroAsignado)?.nombre : '';
-        const mensaje = nuevoEstado === 'ocupada' ?
-            `Mesa ${mesa.id} asignada a ${meseroNombre}` :
-            `Mesa ${mesa.id} marcada como ${getEstadoTexto(nuevoEstado)}`;
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Mesa actualizada',
-            text: mensaje,
-            timer: 1500,
-            showConfirmButton: false
-        });
     }
-};
 
-// Actualizar mesas (refrescar desde servidor)
-const actualizarMesas = async () => {
-    try {
-        const response = await fetch('../data/mesas.json');
-        const data = await response.json();
+    guardarEstado();
+    mostrarTodo();
 
-        // Mantener estados actuales pero actualizar estructura
-        const estadoActual = {};
-        mesas.forEach(mesa => {
-            estadoActual[mesa.id] = {
-                estado: mesa.estado,
-                meseroAsignado: mesa.meseroAsignado,
-                fechaUltimaOcupacion: mesa.fechaUltimaOcupacion
-            };
+    var modal = bootstrap.Modal.getInstance(document.getElementById('modal-gestionar-mesa'));
+    if (modal) modal.hide();
+
+    var mensaje = nuevoEstado === 'ocupada' ?
+        'Mesa asignada correctamente' :
+        'Mesa marcada como ' + obtenerTextoEstado(nuevoEstado);
+
+    Swal.fire('Éxito', mensaje, 'success');
+}
+
+// Actualizar mesas
+function actualizarMesas() {
+    var boton = document.getElementById('actualizar-mesas');
+    var textoOriginal = boton.innerHTML;
+    boton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Actualizando...';
+    boton.disabled = true;
+
+    fetch('../data/mesas.json')
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            var estadosActuales = {};
+            for (var i = 0; i < mesasDelSistema.length; i++) {
+                var mesa = mesasDelSistema[i];
+                estadosActuales[mesa.id] = {
+                    estado: mesa.estado,
+                    meseroAsignado: mesa.meseroAsignado,
+                    nombreReserva: mesa.nombreReserva
+                };
+            }
+
+            mesasDelSistema = data.mesas;
+            for (var j = 0; j < mesasDelSistema.length; j++) {
+                var mesaActual = mesasDelSistema[j];
+                var estadoGuardado = estadosActuales[mesaActual.id];
+                if (estadoGuardado) {
+                    mesaActual.estado = estadoGuardado.estado;
+                    mesaActual.meseroAsignado = estadoGuardado.meseroAsignado;
+                    mesaActual.nombreReserva = estadoGuardado.nombreReserva;
+                }
+            }
+
+            guardarEstado();
+            mostrarTodo();
+            actualizarHora();
+
+            boton.innerHTML = textoOriginal;
+            boton.disabled = false;
+            Swal.fire('Éxito', 'Mesas actualizadas', 'success');
+        })
+        .catch(function (error) {
+            console.log('Error:', error);
+            boton.innerHTML = textoOriginal;
+            boton.disabled = false;
+            Swal.fire('Error', 'No se pudo actualizar', 'error');
         });
-
-        // Actualizar con nuevos datos
-        mesas = data.mesas.map(mesa => ({
-            ...mesa,
-            ...estadoActual[mesa.id]
-        }));
-
-        // Guardar y actualizar interfaz
-        guardarEstadoMesas();
-        generarGridMesas();
-        actualizarResumen();
-        actualizarMisMesas();
-        actualizarTiempo();
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Mesas actualizadas',
-            text: 'El estado de las mesas ha sido actualizado',
-            timer: 1500,
-            showConfirmButton: false
-        });
-
-    } catch (error) {
-        console.error('Error al actualizar mesas:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo actualizar el estado de las mesas'
-        });
-    }
-};
-
-// FUNCIONES UTILITARIAS
+}
 
 // Obtener texto del estado
-const getEstadoTexto = (estado) => {
-    switch (estado) {
-        case 'libre': return 'Libre';
-        case 'ocupada': return 'Ocupada';
-        case 'reservada': return 'Reservada';
-        default: return 'Desconocido';
-    }
-};
+function obtenerTextoEstado(estado) {
+    if (estado === 'libre') return 'Libre';
+    if (estado === 'ocupada') return 'Ocupada';
+    if (estado === 'reservada') return 'Reservada';
+    return 'Desconocido';
+}
 
 // Cerrar sesión
-const cerrarSesion = () => {
+function cerrarSesion() {
     Swal.fire({
         title: '¿Cerrar sesión?',
-        text: 'Se cerrará la sesión actual',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sí, cerrar sesión',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
+        confirmButtonText: 'Sí, cerrar sesión'
+    }).then(function (result) {
         if (result.isConfirmed) {
             localStorage.removeItem('sesionRestaurante');
             window.location.href = '../index.html';
         }
     });
-};
+}
 
-// FUNCIONES DE PERSISTENCIA
+// Guardar estado
+function guardarEstado() {
+    localStorage.setItem('estadoMesas', JSON.stringify(mesasDelSistema));
+}
 
-// Guardar estado de mesas
-const guardarEstadoMesas = () => {
-    localStorage.setItem('estadoMesas', JSON.stringify(mesas));
-};
-
-// INICIALIZACIÓN
-
-// Inicializar cuando el DOM esté listo
+// Inicializar
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', inicializarApp);
+    document.addEventListener('DOMContentLoaded', inicializar);
 } else {
-    inicializarApp();
+    inicializar();
 }

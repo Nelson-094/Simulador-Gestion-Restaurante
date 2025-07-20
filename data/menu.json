@@ -85,14 +85,16 @@
       "nombre": "Agua Mineral",
       "precio": 3000,
       "descripcion": "Con o sin gas, 500ml",
-      "categoria": "bebidas"
+      "categoria": "bebidas",
+      "imagen": "assets/img/agua-mineral.png"
     },
     {
       "id": 12,
       "nombre": "Gaseosa",
       "precio": 4500,
       "descripcion": "Coca Cola, Sprite o Fanta",
-      "categoria": "bebidas"
+      "categoria": "bebidas",
+      "imagen": "assets/img/gaseosa.png"
     }
   ]
 }

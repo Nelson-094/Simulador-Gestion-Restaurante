@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador - Restaurante JS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.32/sweetalert2.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <!-- Icono -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-utensils me-2"></i>
+                Restaurante JS - Administrador
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./mesas.html">Gestionar Mesas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="./admin.html">Panel Admin</a>
+                    </li>
+
+                </ul>
+                <div class="navbar-nav">
+                    <span class="navbar-text me-3" id="usuario-logueado">
+                        <i class="fas fa-user-shield me-1"></i>
+                        <span id="nombre-usuario"></span>
+                    </span>
+                    <button class="btn btn-outline-light btn-sm" id="cerrar-sesion">
+                        <i class="fas fa-sign-out-alt me-1"></i>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4 mb-5">
+        <!-- Dashboard Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-tachometer-alt me-2"></i>Dashboard Administrativo</h2>
+            <div class="text-muted">
+                <i class="fas fa-clock me-1"></i>
+                <span id="fecha-actual"></span>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card availability-stats text-center">
+                    <div class="card-body">
+                        <h3 class="stat-number text-success" id="ventas-hoy">$0</h3>
+                        <p class="stat-label">Ventas Hoy</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card availability-stats text-center">
+                    <div class="card-body">
+                        <h3 class="stat-number text-info" id="pedidos-totales">0</h3>
+                        <p class="stat-label">Pedidos Hoy</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card availability-stats text-center">
+                    <div class="card-body">
+                        <h3 class="stat-number text-warning" id="empleados-activos">0</h3>
+                        <p class="stat-label">Empleados Activos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card availability-stats text-center">
+                    <div class="card-body">
+                        <h3 class="stat-number text-primary" id="mesas-ocupadas-admin">0</h3>
+                        <p class="stat-label">Mesas Ocupadas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-pills mb-4" id="admin-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="empleados-tab" data-bs-toggle="pill"
+                    data-bs-target="#empleados-panel" type="button">
+                    <i class="fas fa-users me-2"></i>Empleados
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="mesas-tab" data-bs-toggle="pill" data-bs-target="#mesas-panel"
+                    type="button">
+                    <i class="fas fa-table me-2"></i>Mesas
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="menu-tab" data-bs-toggle="pill" data-bs-target="#menu-panel" type="button">
+                    <i class="fas fa-utensils me-2"></i>Menú
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pedidos-tab" data-bs-toggle="pill" data-bs-target="#pedidos-panel"
+                    type="button">
+                    <i class="fas fa-receipt me-2"></i>Pedidos
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="admin-tabs-content">
+            <!-- Panel Empleados -->
+            <div class="tab-pane fade show active" id="empleados-panel" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Lista de Empleados</h5>
+                                <button class="btn btn-primary btn-sm" id="agregar-empleado">
+                                    <i class="fas fa-plus me-2"></i>Agregar Empleado
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="lista-empleados">
+                                    <!-- Generado dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Rendimiento</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="rendimiento-empleados">
+                                    <!-- Generado dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Mesas -->
+            <div class="tab-pane fade" id="mesas-panel" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-table me-2"></i>Estado de Mesas en Tiempo Real</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-legend mb-3">
+                            <div class="legend-item">
+                                <div class="legend-color libre"></div>
+                                <span>Libre</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color ocupada"></div>
+                                <span>Ocupada</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color reservada"></div>
+                                <span>Reservada</span>
+                            </div>
+                        </div>
+                        <div class="table-grid" id="mesas-admin-grid">
+                            <!-- Generado dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Menú -->
+            <div class="tab-pane fade" id="menu-panel" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-utensils me-2"></i>Gestión del Menú</h5>
+                        <button class="btn btn-primary btn-sm" id="agregar-plato">
+                            <i class="fas fa-plus me-2"></i>Agregar Plato
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="lista-menu">
+                            <!-- Generado dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Pedidos -->
+            <div class="tab-pane fade" id="pedidos-panel" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Pedidos del Día</h5>
+                        <button class="btn btn-outline-danger btn-sm" id="limpiar-pedidos">
+                            <i class="fas fa-trash me-2"></i>Limpiar Histórico
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="lista-pedidos">
+                            <!-- Generado dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Plato -->
+    <div class="modal fade" id="modal-plato" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-utensils me-2"></i>Agregar Plato
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del Plato</label>
+                        <input type="text" class="form-control" id="plato-nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Precio</label>
+                        <input type="number" class="form-control" id="plato-precio">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <input type="text" class="form-control" id="plato-descripcion">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Categoría</label>
+                        <select class="form-select" id="plato-categoria">
+                            <option value="entradas">Entradas</option>
+                            <option value="platos principales">Platos Principales</option>
+                            <option value="postres">Postres</option>
+                            <option value="bebidas">Bebidas</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardar-plato">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar/Editar Empleado -->
+    <div class="modal fade" id="modal-empleado" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-empleado-title">
+                        <i class="fas fa-user-plus me-2"></i>Agregar Empleado
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-empleado">
+                        <div class="mb-3">
+                            <label for="empleado-nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="empleado-nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="empleado-usuario" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="empleado-usuario" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="empleado-password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="empleado-password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="empleado-rol" class="form-label">Rol</label>
+                            <select class="form-select" id="empleado-rol" required>
+                                <option value="mesero">Mesero</option>
+                                <option value="administrador">Administrador</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardar-empleado">
+                        <i class="fas fa-save me-2"></i>Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.32/sweetalert2.min.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+
+</html>
